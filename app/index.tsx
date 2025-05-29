@@ -1,19 +1,45 @@
-import { Stack, Link } from 'expo-router';
+import { useEffect } from 'react';
+import { useRouter } from 'expo-router';
+import { View, Text, Image, Animated } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Button } from '~/components/Button';
-import { Container } from '~/components/Container';
-import { ScreenContent } from '~/components/ScreenContent';
+const isAuthenticated = false;
 
-export default function Home() {
+export default function Splash() {
+  const router = useRouter();
+  const fadeAnim = new Animated.Value(0);
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+
+    const timer = setTimeout(() => {
+      if (isAuthenticated) {
+        router.replace('/(tabs)/home');
+      } else {
+        router.replace('/auth');
+      }
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <>
-      <Stack.Screen options={{ title: 'Home' }} />
-      <Container>
-        <ScreenContent path="app/index.tsx" title="Home"></ScreenContent>
-        <Link href={{ pathname: '/details', params: { name: 'Dan' } }} asChild>
-          <Button title="Show Details" />
-        </Link>
-      </Container>
-    </>
+    <SafeAreaView className="bg-primary-700 flex-1">
+      <Animated.View
+        className="flex-1 items-center justify-center p-4"
+        style={{ opacity: fadeAnim }}>
+        <Text className="font-clashmedium mb-2 text-2xl text-gray-100">Kaluuba</Text>
+
+        <View className="mt-4 flex-row gap-2">
+          <View className="bg-primary-300 h-2 w-2 animate-bounce rounded-full" />
+          <View className="bg-primary-200 h-2 w-2 animate-bounce rounded-full delay-100" />
+          <View className="bg-primary-100 h-2 w-2 animate-bounce rounded-full delay-200" />
+        </View>
+      </Animated.View>
+    </SafeAreaView>
   );
 }

@@ -1,0 +1,127 @@
+[
+  {
+    "name": "Afghanistan",
+    "code": "AF",
+    "flag": "🇦🇫"
+  },
+  {
+    "name": "Angola",
+    "code": "AO",
+    "flag": "🇦🇴"
+  },
+  {
+    "name": "Australia",
+    "code": "AU",
+    "flag": "🇦🇺"
+  },
+  {
+    "name": "Brazil",
+    "code": "BR",
+    "flag": "🇧🇷"
+  },
+  {
+    "name": "Cameroon",
+    "code": "CM",
+    "flag": "🇨🇲"
+  },
+  {
+    "name": "Canada",
+    "code": "CA",
+    "flag": "🇨🇦"
+  },
+  {
+    "name": "China",
+    "code": "CN",
+    "flag": "🇨🇳"
+  },
+  {
+    "name": "Egypt",
+    "code": "EG",
+    "flag": "🇪🇬"
+  },
+  {
+    "name": "Ethiopia",
+    "code": "ET",
+    "flag": "🇪🇹"
+  },
+  {
+    "name": "France",
+    "code": "FR",
+    "flag": "🇫🇷"
+  },
+  {
+    "name": "Germany",
+    "code": "DE",
+    "flag": "🇩🇪"
+  },
+  {
+    "name": "Ghana",
+    "code": "GH",
+    "flag": "🇬🇭"
+  },
+  {
+    "name": "India",
+    "code": "IN",
+    "flag": "🇮🇳"
+  },
+  {
+    "name": "Japan",
+    "code": "JP",
+    "flag": "🇯🇵"
+  },
+  {
+    "name": "Kenya",
+    "code": "KE",
+    "flag": "🇰🇪"
+  },
+  {
+    "name": "Morocco",
+    "code": "MA",
+    "flag": "🇲🇦"
+  },
+  {
+    "name": "Nigeria",
+    "code": "NG",
+    "flag": "🇳🇬"
+  },
+  {
+    "name": "Rwanda",
+    "code": "RW",
+    "flag": "🇷🇼"
+  },
+  {
+    "name": "Senegal",
+    "code": "SN",
+    "flag": "🇸🇳"
+  },
+  {
+    "name": "South Africa",
+    "code": "ZA",
+    "flag": "🇿🇦"
+  },
+  {
+    "name": "Tanzania",
+    "code": "TZ",
+    "flag": "🇹🇿"
+  },
+  {
+    "name": "Uganda",
+    "code": "UG",
+    "flag": "🇺🇬"
+  },
+  {
+    "name": "United Kingdom",
+    "code": "GB",
+    "flag": "🇬🇧"
+  },
+  {
+    "name": "United States",
+    "code": "US",
+    "flag": "🇺🇸"
+  },
+  {
+    "name": "Zimbabwe",
+    "code": "ZW",
+    "flag": "🇿🇼"
+  }
+]
