@@ -1,11 +1,11 @@
 const endpoints = {
     auth: {
-        login: '/api/auth/login',
-        logout: '/api/auth/logout',
-        register: '/api/auth/register',
-        refresh: '/api/auth/refresh',
-        forgotPassword: '/api/auth/forgot-password',
-        resetPassword: '/api/auth/reset-password',
+        login: '/auth/login',
+        logout: '/auth/logout',
+        register: '/auth/register',
+        refresh: '/auth/refresh',
+        forgotPassword: '/auth/forgot-password',
+        resetPassword: '/auth/reset-password',
     },
 };
 

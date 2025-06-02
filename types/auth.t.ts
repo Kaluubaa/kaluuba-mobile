@@ -5,7 +5,7 @@ export type RegisterInput = {
 };
 
 export type LoginInput = {
-    email: string;
+    username: string;
     password: string;
 };
 export type VerifyOtpInput = {

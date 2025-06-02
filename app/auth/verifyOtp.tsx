@@ -7,7 +7,8 @@ import { Button } from '~/components/reusbales/Button';
 import { Container } from '~/components/reusbales/Container';
 import { OTPInput } from '~/components/reusbales/OtpInput';
 import { useVerifyOtp } from '~/hooks/use-auth';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useToast } from '~/context/ToastContext';
 
 const otpSchema = z.object({
   otp: z.string().length(6, 'Enter the 6-digit code'),
@@ -16,8 +17,7 @@ const otpSchema = z.object({
 type OtpFormData = z.infer<typeof otpSchema>;
 
 const VerifyOtp = () => {
-
-    const { email } = useLocalSearchParams()
+  const { email } = useLocalSearchParams();
   const {
     control,
     handleSubmit,
@@ -27,18 +27,31 @@ const VerifyOtp = () => {
     defaultValues: { otp: '' },
   });
 
-const  { mutate, isPending } = useVerifyOtp()
+  const { mutate, isPending } = useVerifyOtp();
+    const { showToast } = useToast();
+  
   const onSubmit = (data: OtpFormData) => {
     console.log('OTP submitted:', data.otp);
-    mutate({ email: email as string, otp: data.otp })
+    mutate(
+      { email: email as string, otp: data.otp },
+      {
+        onSuccess: (res) => {
+          console.log(res);
+          router.push('/auth/success');
+        },
+        onError: (err) => {
+          console.log(err);
+        },
+      }
+    );
   };
 
   return (
     <Container className="flex-1 bg-white" loading={isPending}>
       <View className="px-4 py-8">
-        <Text className="font-clashmedium mb-2 text-2xl text-gray-900">Verify Code</Text>
-        <Text className="font-jarkataregular mb-8 text-gray-600">
-          Enter the 6-digit code sent to { email }
+        <Text className="mb-2 font-clashmedium text-2xl text-gray-900">Verify Code</Text>
+        <Text className="mb-8 font-jarkataregular text-gray-600">
+          Enter the 6-digit code sent to {email}
         </Text>
 
         <Controller

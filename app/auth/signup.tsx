@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Pressable, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useForm, Controller } from 'react-hook-form';
@@ -12,6 +12,7 @@ import { Link, router } from 'expo-router';
 import countries from '~/constants/countries.json';
 import CountryModal from '~/components/auth/CountryModal';
 import { useRegister } from '~/hooks/use-auth';
+import { useToast } from '~/context/ToastContext';
 
 const signupSchema = z.object({
   firstName: z.string().min(2, 'First name must be at least 2 characters'),
@@ -57,6 +58,7 @@ const Signup = () => {
   });
 
   const { mutate, isPending } = useRegister();
+  const { showToast } = useToast();
 
   const selectedCountry = watch('country');
 
@@ -74,6 +76,11 @@ const Signup = () => {
         },
         onError: (err) => {
           console.log(err.message);
+          showToast({
+            type: 'error',
+            message: 'Login Failed!',
+            description: err.message,
+          });
         },
       }
     );
@@ -81,16 +88,19 @@ const Signup = () => {
 
   return (
     <Container className="flex-1 bg-white" loading={isPending}>
+      
       <View className="px-2 py-6">
         <View className="mb-8">
-          <View className="flex-row items-center gap-3 mb-6">
+          <Pressable onPress={() => router.back()} className="flex-row items-center gap-3 mb-6">
             <Ionicons name="chevron-back" size={22} color="#000000" />
-            <Text className="font-clashmedium text-2xl text-gray-900">Create An Account</Text>
-          </View>
+            <Text className="font-clashmedium text-[22px] text-gray-900">Create An Account</Text>
+          </Pressable>
           <Text className="font-jarkataregular mt-3 text-gray-600">
             🚀 Ready to join the adventure? Fill in your details and let&apos;s get started!
           </Text>
         </View>
+
+        <ScrollView>
 
         <View className="gap-4">
           <Controller
@@ -204,13 +214,15 @@ const Signup = () => {
             Sign In
           </Link>
         </View>
-      </View>
 
-      <View className="mb-8 mt-auto px-2">
+      <View className="mb-8 my-6 px-2">
         <Button size="lg" className="h-[46px]" onPress={handleSubmit(onSubmit)}>
           Create Account
         </Button>
       </View>
+        </ScrollView>
+      </View>
+
 
       <CountryModal
         filteredCountries={filteredCountries}

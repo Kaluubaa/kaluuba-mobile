@@ -27,13 +27,14 @@ export default function Splash() {
     return () => clearTimeout(timer);
   }, []);
 
+
+
   return (
-    <SafeAreaView className="bg-primary-700 flex-1">
+    <SafeAreaView className="bg-primary-500 flex-1">
       <Animated.View
         className="flex-1 items-center justify-center p-4"
         style={{ opacity: fadeAnim }}>
         <Text className="font-clashmedium mb-2 text-2xl text-gray-100">Kaluuba</Text>
-
         <View className="mt-4 flex-row gap-2">
           <View className="bg-primary-300 h-2 w-2 animate-bounce rounded-full" />
           <View className="bg-primary-200 h-2 w-2 animate-bounce rounded-full delay-100" />
