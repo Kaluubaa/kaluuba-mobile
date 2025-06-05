@@ -47,7 +47,6 @@ const CreateInvoice = () => {
 
   const onSubmit = (data: InvoiceFormData) => {
     setSubmitting(true);
-    // TODO: Call your API here
     setTimeout(() => setSubmitting(false), 1000);
   };
 

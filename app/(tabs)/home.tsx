@@ -12,7 +12,7 @@ const home = () => {
     {
       title: 'Invoice',
       icon: 'document-attach-outline',
-      onPress: () => router.push('/screens/create-invoice'),
+      onPress: () => router.push('/invoices/create'),
     },
     {
       title: 'Scan',
@@ -38,6 +38,7 @@ const home = () => {
 
           <View className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-600">
             <Text className="font-clashmedium text-sm text-white">K</Text>
+            
           </View>
         </View>
         <BalanceCard />
