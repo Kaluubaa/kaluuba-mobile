@@ -14,6 +14,8 @@
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
     "@hookform/resolvers": "^5.0.1",
+    "@react-native-async-storage/async-storage": "2.1.2",
+    "@react-native-community/datetimepicker": "^8.4.1",
     "@react-navigation/native": "^7.0.3",
     "@tanstack/react-query": "^5.79.0",
     "axios": "^1.9.0",
@@ -38,8 +40,7 @@
     "react-native-screens": "~4.10.0",
     "react-native-web": "^0.20.0",
     "tailwind-merge": "^3.3.0",
-    "zod": "^3.25.36",
-    "@react-native-async-storage/async-storage": "2.1.2"
+    "zod": "^3.25.36"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

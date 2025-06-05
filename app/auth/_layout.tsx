@@ -33,6 +33,13 @@ const _layout = () => {
           headerShown: false,
         }}
       />
+
+        <Stack.Screen
+        name="success"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 };

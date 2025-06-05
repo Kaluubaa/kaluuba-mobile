@@ -42,7 +42,7 @@ export const Input = ({
       <View className="relative">
         <View
           className={twMerge(
-            'flex-row items-center rounded-lg border border-gray-300 bg-white px-3 h-[47px]',
+            'flex-row items-center rounded-xl border border-gray-300 bg-white px-3 h-[47px]',
             isFocused && 'border-primary-500',
             error && 'border-red-500',
             inputClassName
@@ -51,7 +51,7 @@ export const Input = ({
             <Ionicons
               name={leftIcon}
               size={20}
-              color={error ? '#ef4444' : isFocused ? '#0c89eb' : '#6b7280'}
+              color={error ? '#ef4444' : isFocused ? '#4c18cc' : '#6b7280'}
               style={{ marginRight: 8 }}
             />
           )}

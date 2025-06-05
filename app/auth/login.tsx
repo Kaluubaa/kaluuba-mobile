@@ -1,16 +1,18 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Input } from '~/components/reusbales/Input';
 import { Button } from '~/components/reusbales/Button';
 import { Container } from '~/components/reusbales/Container';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useLogin } from '~/hooks/use-auth';
+import { useToast } from '~/context/ToastContext';
 
 const loginSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
+  username: z.string().min(2, 'username must be at least 2 chars'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
 });
 
@@ -24,25 +26,45 @@ const Login = () => {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: '',
+      username: '',
       password: '',
     },
   });
 
+  const { mutate, isPending } = useLogin();
+  const { showToast } = useToast();
+
   const onSubmit = (data: LoginFormData) => {
     console.log('Login data:', data);
-    // Handle login logic here
+
+    mutate(
+      { username: data.username, password: data.password },
+      {
+        onSuccess: (res) => {
+          console.log(res);
+          router.push({ pathname: '/(tabs)/home' });
+        },
+        onError: (err) => {
+          console.log(err.message);
+          showToast({
+            type: 'error',
+            message: 'Login Failed!',
+            description: err.message,
+          });
+        },
+      }
+    );
   };
 
   return (
-    <Container className="flex-1 bg-white">
+    <Container className="flex-1 bg-white" loading={isPending}>
       <View className="px-2 py-6">
         <View className="mb-8">
-          <View className="flex-row items-center gap-3">
+          <Pressable onPress={() => router.back()} className="mb-6 flex-row items-center gap-3">
             <Ionicons name="chevron-back" size={22} color="#000000" />
             <Text className="font-clashmedium text-2xl text-gray-900">Sign To Your Account</Text>
-          </View>
-          <Text className="font-jarkataregular mt-3 text-gray-600">
+          </Pressable>
+          <Text className="mt-3 font-jarkataregular text-gray-600">
             Welcome back 🚀! Please enter your credentials to continue.
           </Text>
         </View>
@@ -50,17 +72,17 @@ const Login = () => {
         <View className="gap-4">
           <Controller
             control={control}
-            name="email"
+            name="username"
             render={({ field: { onChange, value } }) => (
               <Input
-                label="Email"
-                placeholder="Enter your email"
-                leftIcon="mail-outline"
-                keyboardType="email-address"
+                label="username"
+                placeholder="Enter your username"
+                leftIcon="person-outline"
+                keyboardType="default"
                 autoCapitalize="none"
                 onChangeText={onChange}
                 value={value}
-                error={errors.email?.message}
+                error={errors.username?.message}
               />
             )}
           />
@@ -81,7 +103,9 @@ const Login = () => {
             )}
           />
 
-          <Text className='text-sm font-jarkatalight text-right text-gray-700'>Forgotten Password?</Text>
+          <Text className="text-right font-jarkatalight text-sm text-gray-700">
+            Forgotten Password?
+          </Text>
         </View>
 
         <View className="my-8 px-2">
@@ -90,7 +114,9 @@ const Login = () => {
           </Button>
         </View>
         <View className="flex-row items-center justify-center space-x-1">
-          <Text className="font-jarkataregular text-sm text-gray-600">Don&apos;t have an account?</Text>
+          <Text className="font-jarkataregular text-sm text-gray-600">
+            Don&apos;t have an account?
+          </Text>
           <Link href="/auth/signup" className="font-jarkatamedium text-primary-500">
             Sign Up
           </Link>
