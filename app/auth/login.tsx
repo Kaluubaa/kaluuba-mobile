@@ -10,6 +10,7 @@ import { Link, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useLogin } from '~/hooks/use-auth';
 import { useToast } from '~/context/ToastContext';
+import { useAuth } from '~/context/AuthContext';
 
 const loginSchema = z.object({
   username: z.string().min(2, 'username must be at least 2 chars'),
@@ -31,6 +32,7 @@ const Login = () => {
     },
   });
 
+  const { login } = useAuth();
   const { mutate, isPending } = useLogin();
   const { showToast } = useToast();
 
@@ -40,8 +42,9 @@ const Login = () => {
     mutate(
       { username: data.username, password: data.password },
       {
-        onSuccess: (res) => {
+        onSuccess: (res: any) => {
           console.log(res);
+          login(res?.data?.token, res?.data?.user);
           router.push({ pathname: '/(tabs)/home' });
         },
         onError: (err) => {
