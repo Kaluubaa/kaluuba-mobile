@@ -3,32 +3,18 @@ import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
-const transactions = [
-  {
-    id: '1',
-    type: 'Received',
-    amount: '+₦12,000',
-    date: 'Today',
-    icon: 'arrow-down-outline',
-    color: 'text-green-500',
-  },
-  {
-    id: '2',
-    type: 'Withdraw',
-    amount: '-₦5,000',
-    date: 'Yesterday',
-    icon: 'arrow-up-outline',
-    color: 'text-red-500',
-  },
-  {
-    id: '3',
-    type: 'Invoice Paid',
-    amount: '+₦20,000',
-    date: '2 days ago',
-    icon: 'document-attach-outline',
-    color: 'text-blue-500',
-  },
-];
+const transactions: {
+  id: string;
+  type: string;
+  description: string;
+  amount: string;
+  date: string;
+  time: string;
+  icon: string;
+  color: string;
+  category: string;
+  status: string;
+}[] = [];
 
 const TransactionHistory = () => {
   return (
@@ -51,7 +37,7 @@ const TransactionHistory = () => {
               <Ionicons name={item.icon as any} size={18} className={item.color} />
             </View>
             <View className="flex-1">
-              <Text className="font-jarkatamedium text-gray-900 text-sm">{item.type}</Text>
+              <Text className="font-jarkatamedium text-sm text-gray-900">{item.type}</Text>
               <Text className="text-xs text-gray-400">{item.date}</Text>
             </View>
             <Text className={`font-jarkatamedium text-xs  ${item.color}`}>{item.amount}</Text>
@@ -59,7 +45,7 @@ const TransactionHistory = () => {
         )}
         ListEmptyComponent={
           <View className="items-center py-8">
-            <Text className="text-gray-400">No transactions yet</Text>
+            <Text className="text-gray-400">No transactions yet.</Text>
           </View>
         }
         scrollEnabled={false}

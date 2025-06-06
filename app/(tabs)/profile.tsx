@@ -4,6 +4,7 @@ import { Container } from '~/components/reusbales/Container';
 import { useAuth } from '~/context/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
+import Header from '~/components/reusbales/Header';
 // import { useProfile } from '~/hooks/use-auth';
 
 export default function ProfileScreen() {
@@ -25,10 +26,10 @@ export default function ProfileScreen() {
   }
 
   return (
-    <Container className="pt-6">
+    <Container className="">
+      <Header title="Profile" />
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        {/* Header Section */}
-        <View className="bg-purple-500 px-6 pb-20 pt-8">
+        <View className="bg-purple-500 px-6 pb-10">
           <SafeAreaView>
             <View className="items-center">
               <View className="relative mb-4">
@@ -67,7 +68,7 @@ export default function ProfileScreen() {
               </View>
               <View className="mt-1 flex-row items-center gap-2">
                 <Text className="font-clashmedium text-[26px] text-gray-900">
-                  {showBalance ? '$ 112.00' : '₦ ****'}
+                  {showBalance ? '$ 00.00' : '₦ ****'}
                 </Text>
                 <Text className="font-jarkataregular text-gray-100">usdc</Text>
               </View>
@@ -80,7 +81,7 @@ export default function ProfileScreen() {
 
               <View className="items-center">
                 <Text className="font-jarkatasemibold text-lg text-purple-600">
-                  {showBalance ? '₦ 89,600.00' : '₦ ****'}
+                  {showBalance ? '₦ 00.00' : '₦ ****'}
                 </Text>
                 <Text className="text-xs text-gray-500">NGN</Text>
               </View>

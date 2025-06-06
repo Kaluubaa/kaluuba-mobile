@@ -20,7 +20,7 @@ const BalanceCard = (props: Props) => {
       </View>
       <View className='flex-row gap-2 items-center mt-1'>
         <Text className='text-gray-100 text-[26px] font-clashmedium'>
-          {showBalance ? '$ 112.00' : '$ ****'}
+          {showBalance ? '$ 00.00' : '$ ****'}
         </Text>
         <Text className='text-gray-100  font-jarkataregular'> usdc</Text>
       </View>
@@ -31,7 +31,7 @@ const BalanceCard = (props: Props) => {
       Local Balance (NGN)
     </Text>
     <Text className='text-white text-sm font-jarkataregular'>
-      {showBalance ? '₦ 89,600.00' : '₦ ****'}
+      {showBalance ? '₦ 00.00' : '₦ ****'}
     </Text>
   </View>
   <View>
