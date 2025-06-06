@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 const transactions = [
   {
@@ -34,7 +35,7 @@ const TransactionHistory = () => {
     <View className="mt-8 px-2">
       <View className="mb-3 flex-row items-center justify-between">
         <Text className="font-clashmedium text-gray-800">Recent Transactions</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push('/history')}>
           <Text className="items-center gap-2 font-jarkatamedium text-sm text-primary-600">
             <Text>See all </Text>
             <Ionicons name="arrow-forward" />{' '}

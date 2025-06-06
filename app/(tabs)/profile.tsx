@@ -1,15 +1,20 @@
-import { View, Image, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Image, Text, ScrollView, TouchableOpacity, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Container } from '~/components/reusbales/Container';
 import { useAuth } from '~/context/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
-import { useProfile } from '~/hooks/use-auth';
+import React from 'react';
+// import { useProfile } from '~/hooks/use-auth';
 
 export default function ProfileScreen() {
-  const { data, isLoading } = useProfile();
-  const profileUser = data?.user;
+  // const { data, isLoading } = useProfile();
+  // const profileUser = data?.user;
 
-  if (isLoading) {
+  const [showBalance, setShowBalance] = React.useState<boolean>(false);
+
+  const { user: profileUser, loading } = useAuth();
+
+  if (loading) {
     return (
       <Container className="pt-6">
         <View className="flex-1 items-center justify-center">
@@ -20,131 +25,122 @@ export default function ProfileScreen() {
   }
 
   return (
-    <Container className='pt-6'>
-      <ScrollView className="flex-1 pt-4 pb-10" showsVerticalScrollIndicator={false}>
-        <View className="">
+    <Container className="pt-6">
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        {/* Header Section */}
+        <View className="bg-purple-500 px-6 pb-20 pt-8">
           <SafeAreaView>
-            <View className="px-4">
-              <View className="flex-row items-center justify-between">
+            <View className="items-center">
+              <View className="relative mb-4">
+                <Image
+                  source={{ uri: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=John' }}
+                  className="h-20 w-20 rounded-full border-2 border-white"
+                />
+                <TouchableOpacity className="absolute -bottom-1 -right-1 rounded-full bg-white p-1.5">
+                  <Ionicons name="camera" size={14} color="#8B5CF6" />
+                </TouchableOpacity>
               </View>
+
+              <Text className="mb-1 font-jarkatasemibold text-lg text-white">
+                {profileUser?.username}
+              </Text>
+              <Text className="font-jarkataregular text-sm text-purple-100">
+                {profileUser?.email}
+              </Text>
             </View>
           </SafeAreaView>
         </View>
 
-        <View className="-mt-16 px-4">
-          <View className="items-center">
-            <View className="relative">
-              <Image
-                source={{ uri: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=John' }}
-                className="h-32 w-32 rounded-full border-4 border-white"
-              />
-              <TouchableOpacity className="absolute bottom-0 right-0 rounded-full bg-primary-500 p-2">
-                <Ionicons name="camera" size={20} color="white" />
-              </TouchableOpacity>
-            </View>
-            <View className="mt-4 items-center">
-              <Text className="text-xl font-jarkatasemibold text-gray-900">{profileUser?.username}</Text>
-              <Text className="text-gray-500 text-sm font-jarkataregular">{profileUser?.email}</Text>
-              {profileUser?.wallet && (
-                <Text className="text-xs text-gray-400 mt-1 font-jarkatalight">
-                  {profileUser.wallet.address.slice(0, 6)}...{profileUser.wallet.address.slice(-4)}
+        {/* Balance Card */}
+        <View className="-mt-12 mb-6 px-6">
+          <View className="rounded-2xl bg-white p-6 shadow-lg">
+            <View className="mb-4 items-center">
+              <View className="flex-row items-center gap-2">
+                <Text className="font text-sm text-gray-900">Account Balance</Text>
+                <Pressable onPress={() => setShowBalance(!showBalance)} className="p-2">
+                  <Ionicons
+                    name={showBalance ? 'eye-outline' : 'eye-off-outline'}
+                    size={20}
+                    color="#9ca3af"
+                  />
+                </Pressable>
+              </View>
+              <View className="mt-1 flex-row items-center gap-2">
+                <Text className="font-clashmedium text-[26px] text-gray-900">
+                  {showBalance ? '$ 112.00' : '₦ ****'}
                 </Text>
-              )}
-            </View>
-          </View>
-
-          <View className="mt-6 flex-row justify-between">
-            <TouchableOpacity className="items-center rounded-xl bg-white p-4" style={{ width: '31%' }}>
-              <View className="rounded-full bg-primary-100 p-3">
-                <Ionicons name="document-text-outline" size={24} color="#007AFF" />
-              </View>
-              <Text className="mt-2 text-sm font-jarkatamedium text-gray-900">Invoices</Text>
-              <Text className="text-xs font-jarkatalight text-gray-500">12 Total</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity className="items-center rounded-xl bg-white p-4" style={{ width: '31%' }}>
-              <View className="rounded-full bg-green-100 p-3">
-                <Ionicons name="checkmark-circle-outline" size={24} color="#34C759" />
-              </View>
-              <Text className="mt-2 text-sm font-jarkatasemibold text-gray-900">Paid</Text>
-              <Text className="text-xs font-jarkatalight text-gray-500">8 Invoices</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity className="items-center rounded-xl bg-white p-4" style={{ width: '31%' }}>
-              <View className="rounded-full bg-orange-100 p-3">
-                <Ionicons name="cash-outline" size={24} color="#FF9500" />
-              </View>
-              <Text className="mt-2 text-sm font-jarkatasemibold text-gray-900">Total</Text>
-              <Text className="text-xs font-jarkatalight text-gray-500">₦450K</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View className="mt-6 space-y-4">
-            <Text className="text-lg font-jarkatasemibold text-gray-900 mb-4">Account Information</Text>
-            
-            <View className="rounded-xl bg-white p-4 mb-4">
-              <View className="flex-row items-center justify-between">
-                <View className="flex-row items-center">
-                  <View className="rounded-full bg-blue-100 p-2">
-                    <Ionicons name="shield-checkmark-outline" size={20} color="#007AFF" />
-                  </View>
-                  <View className="ml-3">
-                    <Text className="text-sm font-jarkatasemibold text-gray-900">Verification Status</Text>
-                    <Text className="text-xs font-jarkatalight text-gray-500">
-                      {profileUser?.is_verified ? 'Verified Account' : 'Pending Verification'}
-                    </Text>
-                  </View>
-                </View>
-                <View className={`h-2 w-2 rounded-full ${profileUser?.is_verified ? 'bg-green-500' : 'bg-yellow-500'}`} />
+                <Text className="font-jarkataregular text-gray-100">usdc</Text>
               </View>
             </View>
+            <View className="flex-row justify-between border-t border-gray-100 pt-4">
+              <View className="items-center">
+                <Text className="font-jarkatasemibold text-lg text-gray-900">12</Text>
+                <Text className="text-xs text-gray-500">Invoices</Text>
+              </View>
 
-            <View className="rounded-xl bg-white p-4">
+              <View className="items-center">
+                <Text className="font-jarkatasemibold text-lg text-purple-600">
+                  {showBalance ? '₦ 89,600.00' : '₦ ****'}
+                </Text>
+                <Text className="text-xs text-gray-500">NGN</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* Account Status */}
+        <View className="mb-6 px-6">
+          <View className="rounded-xl bg-white p-4">
+            <View className="flex-row items-center justify-between">
               <View className="flex-row items-center">
-                <View className="rounded-full bg-purple-100 p-2">
-                  <Ionicons name="calendar-outline" size={20} color="#AF52DE" />
+                <View className="mr-3 rounded-full bg-purple-100 p-2">
+                  <Ionicons
+                    name={profileUser?.is_verified ? 'shield-checkmark' : 'shield-outline'}
+                    size={18}
+                    color="#8B5CF6"
+                  />
                 </View>
-                <View className="ml-3">
-                  <Text className="text-sm font-jarkatasemibold text-gray-900">Member Since</Text>
-                  <Text className="text-xs font-jarkatalight text-gray-500">
-                    {new Date(profileUser?.created_at || '').toLocaleDateString()}
+                <View>
+                  <Text className="font-jarkatasemibold text-sm text-gray-900">
+                    {profileUser?.is_verified ? 'Verified Account' : 'Pending Verification'}
+                  </Text>
+                  <Text className="text-xs text-gray-500">
+                    Member since {new Date(profileUser?.created_at || '').toLocaleDateString()}
                   </Text>
                 </View>
               </View>
+              <View
+                className={`h-3 w-3 rounded-full ${profileUser?.is_verified ? 'bg-green-500' : 'bg-yellow-500'}`}
+              />
             </View>
           </View>
+        </View>
 
-          <View className="mt-6 gap-4">
-            <Text className="text-lg font-jarkatasemibold text-gray-900">Settings</Text>
-            
-            <TouchableOpacity className="flex-row items-center justify-between rounded-xl bg-white p-4">
-              <View className="flex-row items-center">
-                <View className="rounded-full bg-gray-100 p-2">
-                  <Ionicons name="notifications-outline" size={20} color="#8E8E93" />
-                </View>
-                <Text className="ml-3 text-gray-900">Notifications</Text>
+        <View className="px-6 pb-8">
+          <Text className="mb-3 font-jarkatasemibold text-base text-gray-900">Settings</Text>
+          <View className="overflow-hidden rounded-xl bg-white">
+            <TouchableOpacity className="flex-row items-center border-b border-gray-100 p-4">
+              <View className="mr-3 rounded-full bg-gray-100 p-2">
+                <Ionicons name="wallet-outline" size={18} color="#6B7280" />
               </View>
-              <Ionicons name="chevron-forward" size={20} color="#8E8E93" />
+              <Text className="flex-1 text-sm text-gray-900">Wallet Settings</Text>
+              <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
             </TouchableOpacity>
 
-            <TouchableOpacity className="flex-row items-center justify-between rounded-xl bg-white p-4">
-              <View className="flex-row items-center">
-                <View className="rounded-full bg-gray-100 p-2">
-                  <Ionicons name="lock-closed-outline" size={20} color="#8E8E93" />
-                </View>
-                <Text className="ml-3 text-gray-900">Privacy & Security</Text>
+            <TouchableOpacity className="flex-row items-center border-b border-gray-100 p-4">
+              <View className="mr-3 rounded-full bg-gray-100 p-2">
+                <Ionicons name="notifications-outline" size={18} color="#6B7280" />
               </View>
-              <Ionicons name="chevron-forward" size={20} color="#8E8E93" />
+              <Text className="flex-1 text-sm text-gray-900">Notifications</Text>
+              <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
             </TouchableOpacity>
 
-            <TouchableOpacity className="flex-row items-center justify-between rounded-xl bg-white p-4">
-              <View className="flex-row items-center">
-                <View className="rounded-full bg-gray-100 p-2">
-                  <Ionicons name="help-circle-outline" size={20} color="#8E8E93" />
-                </View>
-                <Text className="ml-3 text-gray-900">Help & Support</Text>
+            <TouchableOpacity className="flex-row items-center p-4">
+              <View className="mr-3 rounded-full bg-gray-100 p-2">
+                <Ionicons name="help-circle-outline" size={18} color="#6B7280" />
               </View>
-              <Ionicons name="chevron-forward" size={20} color="#8E8E93" />
+              <Text className="flex-1 text-sm text-gray-900">Help & Support</Text>
+              <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
             </TouchableOpacity>
           </View>
         </View>
