@@ -2,6 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useToast } from './ToastContext';
 import { User } from '~/types/user';
+import { useProfile } from '~/hooks/use-auth';
+import { getUser } from '~/services/auth.service';
 
 
 interface AuthContextProps {
@@ -18,12 +20,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
+  // const { data, isLoading } = useProfile()
 
   const login = async (token: string, userData: User) => {
     try {
       await AsyncStorage.setItem('authToken', token);
-      await AsyncStorage.setItem('user', JSON.stringify(userData));
-      setUser(userData);
+      // setUser(userData);
 
       showToast({
         type: 'success',
@@ -62,17 +64,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  
   useEffect(() => {
     const initializeAuth = async () => {
       try {
         setLoading(true);
-        const [token, userData] = await Promise.all([
+        const [token] = await Promise.all([
           AsyncStorage.getItem('authToken'),
-          AsyncStorage.getItem('user'),
         ]);
 
-        if (token && userData) {
-          setUser(JSON.parse(userData));
+        
+        if (token) {
+          const user = await getUser();
+          setUser(user?.data?.user);
+          console.log('userrr', user)
         }
       } catch (error) {
         console.error('Failed to initialize auth:', error);
