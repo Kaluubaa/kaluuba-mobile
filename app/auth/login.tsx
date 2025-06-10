@@ -11,6 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLogin } from '~/hooks/use-auth';
 import { useToast } from '~/context/ToastContext';
 import { useAuth } from '~/context/AuthContext';
+import { getUser } from '~/services/auth.service';
 
 const loginSchema = z.object({
   username: z.string().min(2, 'username must be at least 2 chars'),
@@ -32,7 +33,7 @@ const Login = () => {
     },
   });
 
-  const { login } = useAuth();
+  const { login, setUser } = useAuth();
   const { mutate, isPending } = useLogin();
   const { showToast } = useToast();
 
@@ -42,9 +43,11 @@ const Login = () => {
     mutate(
       { username: data.username, password: data.password },
       {
-        onSuccess: (res: any) => {
-          console.log(res);
+        onSuccess: async (res: any) => {
           login(res?.data?.token, res?.data?.user);
+          // console.log(res);
+          const user = await getUser();
+          setUser(user?.data?.user);
           router.push({ pathname: '/(tabs)/home' });
         },
         onError: (err) => {

@@ -26,7 +26,7 @@ const Toast: React.FC<ToastProps> = ({ type, message, description, duration = 30
 
   const TOAST_CONFIG = {
     success: {
-      gradient: 'from-green-500 to-teal-600',
+      gradient: 'bg-500 ',
       icon: 'check-circle',
       iconColor: 'text-green-200',
       glow: 'shadow-green-500/50',

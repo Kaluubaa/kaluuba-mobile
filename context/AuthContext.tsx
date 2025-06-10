@@ -8,6 +8,7 @@ import { getUser } from '~/services/auth.service';
 
 interface AuthContextProps {
   user: User | null;
+  setUser: (user: User) => void;
   isAuthenticated: boolean;
   login: (token: string, user: User) => Promise<void>;
   logout: () => Promise<void>;
@@ -27,11 +28,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await AsyncStorage.setItem('authToken', token);
       // setUser(userData);
 
-      showToast({
-        type: 'success',
-        message: 'Login Successful',
-        description: `Welcome back, ${userData.username}!`,
-      });
+      // showToast({
+      //   type: 'success',
+      //   message: 'Login Successful',
+      //   description: `Welcome back, ${userData.username}!`,
+      // });
     } catch (error) {
       showToast({
         type: 'error',
@@ -92,7 +93,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated: !!user, login, logout, loading }}>
+      value={{ user, setUser, isAuthenticated: !!user, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

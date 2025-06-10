@@ -9,7 +9,7 @@ const BalanceCard = (props: Props) => {
   return (
     <View className='w-full p-4 rounded-xl min-h-[150px] bg-black/80'>
       <View className='flex-row gap-2 items-center'>
-        <Text className='text-gray-400 text-sm font'>Account Balance</Text>
+        <Text className='text-gray-400 text-sm font-jarkataregular'>Account Balance</Text>
         <Pressable onPress={() => setShowBalance(!showBalance)} className='p-2'>
           <Ionicons 
             name={showBalance ? "eye-outline" : "eye-off-outline"} 

@@ -5,10 +5,10 @@ export interface InvoiceItem {
   }
   
   export interface Invoice {
-    id: string;
+    id?: string;
     title: string;
     currency: string;
-    status: 'draft' | 'pending' | 'paid';
-    createdAt: Date;
+    status?: 'draft' | 'pending' | 'paid';
+    created_at?: Date;
     items: InvoiceItem[];
   }

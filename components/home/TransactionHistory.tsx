@@ -22,10 +22,10 @@ const TransactionHistory = () => {
       <View className="mb-3 flex-row items-center justify-between">
         <Text className="font-clashmedium text-gray-800">Recent Transactions</Text>
         <TouchableOpacity onPress={() => router.push('/history')}>
-          <Text className="items-center gap-2 font-jarkatamedium text-sm text-primary-600">
-            <Text>See all </Text>
-            <Ionicons name="arrow-forward" />{' '}
-          </Text>
+          <View className="flex-row items-center gap-2">
+            <Text className="font-jarkatamedium text-sm text-primary-600">See all</Text>
+            <Ionicons name="arrow-forward" size={16} color="#0c89eb" />
+          </View>
         </TouchableOpacity>
       </View>
       <FlatList
@@ -44,7 +44,7 @@ const TransactionHistory = () => {
           </View>
         )}
         ListEmptyComponent={
-          <View className="items-center py-8">
+          <View className="items-center py-16">
             <Text className="text-gray-400">No transactions yet.</Text>
           </View>
         }

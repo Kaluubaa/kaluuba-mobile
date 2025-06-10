@@ -6,8 +6,10 @@ import { Ionicons } from '@expo/vector-icons';
 import TransactionHistory from '~/components/home/TransactionHistory';
 import SwiperAds from '~/components/home/SwipperAds';
 import { router } from 'expo-router';
+import { useAuth } from '~/context/AuthContext';
 
-const home = () => {
+const Home = () => {
+  const { user } = useAuth();
   const actions = [
     {
       title: 'Invoice',
@@ -34,11 +36,13 @@ const home = () => {
     <Container className="py-6">
       <View className="flex-1 gap-6">
         <View className="flex-row justify-between">
+          <View className='flex-row items-center gap-2'>
           <View className="h-12 w-12 rounded-full bg-gray-300"> </View>
+          <Text className='font-jarkatamedium text-gray-600 text-lg'>@{user?.username}</Text>
+          </View>
 
           <View className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-600">
             <Text className="font-clashmedium text-sm text-white">K</Text>
-            
           </View>
         </View>
         <BalanceCard />
@@ -61,4 +65,4 @@ const home = () => {
   );
 };
 
-export default home;
+export default Home;

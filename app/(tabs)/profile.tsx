@@ -13,7 +13,7 @@ export default function ProfileScreen() {
 
   const [showBalance, setShowBalance] = React.useState<boolean>(false);
 
-  const { user: profileUser, loading } = useAuth();
+  const { user: profileUser, loading, logout } = useAuth();
 
   if (loading) {
     return (
@@ -141,6 +141,14 @@ export default function ProfileScreen() {
                 <Ionicons name="help-circle-outline" size={18} color="#6B7280" />
               </View>
               <Text className="flex-1 text-sm text-gray-900">Help & Support</Text>
+              <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
+            </TouchableOpacity>
+
+            <TouchableOpacity className="flex-row items-center p-4" onPress={logout}>
+              <View className="mr-3 rounded-full bg-gray-100 p-2">
+                <Ionicons name="help-circle-outline" size={18} color="#6B7280" />
+              </View>
+              <Text className="flex-1 text-sm text-gray-900">Log out</Text>
               <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
             </TouchableOpacity>
           </View>

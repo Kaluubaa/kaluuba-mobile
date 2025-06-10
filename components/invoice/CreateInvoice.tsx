@@ -48,9 +48,6 @@ export const CreateInvoice = () => {
     createInvoice(
       {
         ...data,
-        status: 'draft',
-        createdAt: new Date(),
-        id: '', // This will be set by the backend
       },
       {
         onSuccess: () => {

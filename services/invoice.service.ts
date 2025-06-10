@@ -6,7 +6,7 @@ export const createInvoice = async (data: Invoice) => {
 };
 
 export const getUserInvoices = async () => {
-  return apiGet("/invoices");
+  return apiGet<any>("/invoices");
 };
 
 export const deleteInvoice = async (id: string) => {
