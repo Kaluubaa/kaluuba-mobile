@@ -25,7 +25,7 @@ export default function Splash() {
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [fadeAnim, router]);
 
 
 

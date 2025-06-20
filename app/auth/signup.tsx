@@ -68,27 +68,36 @@ const Signup = () => {
 
   const onSubmit = (data: SignupFormData) => {
     console.log('Form data:', data);
-    mutate(
-      { email: data.email, username: data.username, password: data.password },
-      {
-        onSuccess: (res) => {
-          router.push({ pathname: '/auth/verifyOtp', params: { email: data.email } });
-        },
-        onError: (err) => {
-          console.log(err.message);
-          showToast({
-            type: 'error',
-            message: 'Login Failed!',
-            description: err.message,
-          });
-        },
-      }
-    );
+
+    const requestData = {
+      first_name: data.firstName,
+      last_name: data.lastName,
+      email: data.email,
+      username: data.username,
+      password: data.password,
+      country: data.country?.name || ''
+    };
+
+    console.log('Request data being sent:', requestData);
+
+    mutate(requestData, {
+      onSuccess: (res) => {
+        router.push({ pathname: '/auth/verifyOtp', params: { email: data.email } });
+      },
+      onError: (err) => {
+        console.log(err.message);
+        showToast({
+          type: 'error',
+          message: 'Registration Failed!',
+          description: err.message,
+        });
+      },
+    });
   };
 
   return (
     <Container className="flex-1 bg-white" loading={isPending}>
-      
+
       <View className="px-2 py-6">
         <View className="mb-8">
           <Pressable onPress={() => router.back()} className="flex-row items-center gap-3 mb-6">
@@ -102,124 +111,123 @@ const Signup = () => {
 
         <ScrollView>
 
-        <View className="gap-4">
-          <Controller
-            control={control}
-            name="firstName"
-            render={({ field: { onChange, value } }) => (
-              <Input
-                label="First Name"
-                placeholder="Enter your first name"
-                leftIcon="person-outline"
-                onChangeText={onChange}
-                value={value}
-                error={errors.firstName?.message}
-              />
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="lastName"
-            render={({ field: { onChange, value } }) => (
-              <Input
-                label="Last Name"
-                placeholder="Enter your last name"
-                leftIcon="person-outline"
-                onChangeText={onChange}
-                value={value}
-                error={errors.lastName?.message}
-              />
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="username"
-            render={({ field: { onChange, value } }) => (
-              <Input
-                label="User Name"
-                placeholder="Enter your User name"
-                leftIcon="person-outline"
-                onChangeText={onChange}
-                value={value}
-                error={errors.lastName?.message}
-              />
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="email"
-            render={({ field: { onChange, value } }) => (
-              <Input
-                label="Email"
-                placeholder="Enter your email"
-                leftIcon="mail-outline"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                onChangeText={onChange}
-                value={value}
-                error={errors.email?.message}
-              />
-            )}
-          />
-
-          <View>
-            <Text className="font-jarkatamedium mb-2 text-sm text-gray-700">Country</Text>
-            <TouchableOpacity
-              onPress={() => setIsCountryModalVisible(true)}
-              className={`flex-row items-center justify-between rounded-lg border p-3 ${
-                errors.country ? 'border-red-500' : 'border-gray-300'
-              }`}>
-              {selectedCountry ? (
-                <>
-                  <Text className="mr-3 text-lg">{selectedCountry.flag}</Text>
-                  <Text className="font-jarkataregular flex-1 text-gray-900">
-                    {selectedCountry.name}
-                  </Text>
-                </>
-              ) : (
-                <Text className="font-jarkataregular text-gray-500">Select your country</Text>
+          <View className="gap-4">
+            <Controller
+              control={control}
+              name="firstName"
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  label="First Name"
+                  placeholder="Enter your first name"
+                  leftIcon="person-outline"
+                  onChangeText={onChange}
+                  value={value}
+                  error={errors.firstName?.message}
+                />
               )}
-              <Ionicons name="chevron-down" size={20} color="#6B7280" />
-            </TouchableOpacity>
-            {errors.country && (
-              <Text className="font-jarkataregular mt-1 text-sm text-red-500">
-                {errors.country.message}
-              </Text>
-            )}
+            />
+
+            <Controller
+              control={control}
+              name="lastName"
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  label="Last Name"
+                  placeholder="Enter your last name"
+                  leftIcon="person-outline"
+                  onChangeText={onChange}
+                  value={value}
+                  error={errors.lastName?.message}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="username"
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  label="User Name"
+                  placeholder="Enter your User name"
+                  leftIcon="person-outline"
+                  onChangeText={onChange}
+                  value={value}
+                  error={errors.lastName?.message}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  label="Email"
+                  placeholder="Enter your email"
+                  leftIcon="mail-outline"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  onChangeText={onChange}
+                  value={value}
+                  error={errors.email?.message}
+                />
+              )}
+            />
+
+            <View>
+              <Text className="font-jarkatamedium mb-2 text-sm text-gray-700">Country</Text>
+              <TouchableOpacity
+                onPress={() => setIsCountryModalVisible(true)}
+                className={`flex-row items-center justify-between rounded-lg border p-3 ${errors.country ? 'border-red-500' : 'border-gray-300'
+                  }`}>
+                {selectedCountry ? (
+                  <>
+                    <Text className="mr-3 text-lg">{selectedCountry.flag}</Text>
+                    <Text className="font-jarkataregular flex-1 text-gray-900">
+                      {selectedCountry.name}
+                    </Text>
+                  </>
+                ) : (
+                  <Text className="font-jarkataregular text-gray-500">Select your country</Text>
+                )}
+                <Ionicons name="chevron-down" size={20} color="#6B7280" />
+              </TouchableOpacity>
+              {errors.country && (
+                <Text className="font-jarkataregular mt-1 text-sm text-red-500">
+                  {errors.country.message}
+                </Text>
+              )}
+            </View>
+
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  label="Password"
+                  placeholder="Choose a strong password"
+                  leftIcon="lock-closed-outline"
+                  secureTextEntry
+                  onChangeText={onChange}
+                  value={value}
+                  error={errors.password?.message}
+                />
+              )}
+            />
           </View>
 
-          <Controller
-            control={control}
-            name="password"
-            render={({ field: { onChange, value } }) => (
-              <Input
-                label="Password"
-                placeholder="Choose a strong password"
-                leftIcon="lock-closed-outline"
-                secureTextEntry
-                onChangeText={onChange}
-                value={value}
-                error={errors.password?.message}
-              />
-            )}
-          />
-        </View>
+          <View className="mt-6 flex-row items-center justify-center space-x-1">
+            <Text className="font-jarkataregular text-gray-600">Already have an account?</Text>
+            <Link href="/auth/login" className="font-jarkatamedium text-primary-500">
+              Sign In
+            </Link>
+          </View>
 
-        <View className="mt-6 flex-row items-center justify-center space-x-1">
-          <Text className="font-jarkataregular text-gray-600">Already have an account?</Text>
-          <Link href="/auth/login" className="font-jarkatamedium text-primary-500">
-            Sign In
-          </Link>
-        </View>
-
-      <View className="mb-8 my-6 px-2">
-        <Button size="lg" className="h-[46px]" onPress={handleSubmit(onSubmit)}>
-          Create Account
-        </Button>
-      </View>
+          <View className="mb-8 my-6 px-2">
+            <Button size="lg" className="h-[46px]" onPress={handleSubmit(onSubmit)}>
+              Create Account
+            </Button>
+          </View>
         </ScrollView>
       </View>
 

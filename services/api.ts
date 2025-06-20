@@ -1,12 +1,13 @@
 import axios, { AxiosRequestConfig, isAxiosError, Method } from "axios";
 import { QueryClient } from "@tanstack/react-query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_BASE_URL } from './endpoints';
 
 export const api = axios.create({
-  baseURL: "https://kaluuba-api.onrender.com/api",
+  baseURL: API_BASE_URL,
   timeout: 30000,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 

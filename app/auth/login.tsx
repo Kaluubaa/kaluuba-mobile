@@ -103,9 +103,9 @@ const Login = () => {
             )}
           />
 
-          <Text className="text-right font-jarkatalight text-sm text-gray-700">
+          <Link href="/auth/forgotPassword" className="text-right font-jarkatalight text-sm text-primary-500">
             Forgotten Password?
-          </Text>
+          </Link>
         </View>
 
         <View className="my-8 px-2">

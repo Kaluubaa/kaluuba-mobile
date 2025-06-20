@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import { registerUser, loginUser, verifyOtp } from '~/services/auth.service';
-import { LoginInput, RegisterInput, VerifyOtpInput } from '~/types/auth.t';
+import { registerUser, loginUser, verifyOtp, resendOtp } from '~/services/auth.service';
+import { LoginInput, RegisterInput, VerifyOtpInput, ResendOtpInput } from '~/types/auth.t';
 
 export function useRegister() {
   return useMutation({
@@ -17,5 +17,11 @@ export function useLogin() {
 export function useVerifyOtp() {
   return useMutation({
     mutationFn: (data: VerifyOtpInput) => verifyOtp(data),
+  });
+}
+
+export function useResendOtp() {
+  return useMutation({
+    mutationFn: (data: ResendOtpInput) => resendOtp(data),
   });
 }
