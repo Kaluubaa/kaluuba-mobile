@@ -73,18 +73,21 @@ const Signup = () => {
         email: data.email,
         username: data.username,
         password: data.password,
-        country: data.country?.code || null,
+        country: data.country?.name || null,
       },
       {
         onSuccess: (res) => {
           router.push({ pathname: '/auth/verifyOtp', params: { email: data.email } });
         },
-        onError: (err) => {
-          console.log(err);
+        onError: (err: any) => {
+          console.log('bundle bundle', err);
+          const firstField = Object.keys(err.errors || {})[0];
+          const firstMessage = firstField ? err.errors[firstField] : 'Signup failed';
+
           showToast({
             type: 'error',
-            message: 'Login Failed!',
-            description: err.message,
+            message: err.message,
+            description: firstMessage || 'Please try again later',
           });
         },
       }

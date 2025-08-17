@@ -47,9 +47,12 @@ export async function apiRequest<T = any>(
 
     return response.data;
   } catch (error: any) {
-    console.log('hmmmm', error)
+    // console.log('hmmmm', error);
     if (isAxiosError(error)) {
-      throw new Error(error.response?.data?.error || error.message);
+      const backendError = error.response?.data;
+
+      // console.log('Backend error:', backendError);
+      throw backendError || error.message;
     }
 
     throw error;

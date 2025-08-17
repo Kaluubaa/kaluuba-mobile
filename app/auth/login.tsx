@@ -41,21 +41,23 @@ const Login = () => {
     console.log('Login data:', data);
 
     mutate(
-      { username: data.username, password: data.password },
+      { identifier: data.username, password: data.password },
       {
         onSuccess: async (res: any) => {
           login(res?.data?.token, res?.data?.user);
-          // console.log(res);
-          const user = await getUser();
-          setUser(user?.data?.user);
+          console.log(res);
+          // const user = await getUser();
+          // setUser(user?.data?.user);
           router.push({ pathname: '/(tabs)/home' });
         },
-        onError: (err) => {
-          console.log(err.message);
+        onError: (err: any) => {
+          const firstField = Object.keys(err.errors || {})[0];
+          const firstMessage = firstField ? err.errors[firstField] : 'Signup failed';
+
           showToast({
             type: 'error',
-            message: 'Login Failed!',
-            description: err.message,
+            message: err.message,
+            description: firstMessage || 'Please try again later',
           });
         },
       }

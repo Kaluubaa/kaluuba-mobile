@@ -49,6 +49,12 @@ const Layout = () => {
           headerShown: false,
         }}
       />
+
+      <Stack.Screen
+        name="set-pin"
+        options={{
+          headerShown: false,
+        }} />
     </Stack>
   );
 };

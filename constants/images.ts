@@ -8,4 +8,5 @@ export const images = {
     cards: require('../assets/images/cards.png'),
     usdc: require('../assets/images/usdc.png'),
     user: require('../assets/images/user.png'),
+    pattern: require('../assets/images/pattern.webp'),
 }

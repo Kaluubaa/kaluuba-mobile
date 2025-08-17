@@ -32,9 +32,14 @@ const BalanceCard = (props: Props) => {
 
   const [showBalance, setShowBalance] = React.useState<boolean>(false);
   return (
-    <View className="flex min-h-[150px] w-full items-center rounded-xl bg-white px-4 py-8">
+    <View className="bg--500 relative flex min-h-[150px] w-full items-center rounded-xl bg-white py-6">
+      <Image
+        source={images.pattern}
+        className="absolute inset-0 h-[150px] w-full "
+        style={{ resizeMode: 'cover' }}
+      />
       <View>
-        <View className="w-full flex-row items-center gap-3 rounded-full bg-gray-100 px-3 py-1.5 ">
+        <View className="w-full flex-row items-center gap-3 rounded-full bg-gray-200 px-3 py-1.5 ">
           <View className="size-5 overflow-hidden rounded-full bg-black">
             <Image source={images.usdc} className="h-full w-full" />
           </View>
@@ -45,8 +50,8 @@ const BalanceCard = (props: Props) => {
       </View>
 
       <View className="mt-6 flex-row items-center gap-2">
-        <Text className="font-clashmedium text-[26px] text-gray-900">
-          {showBalance ? '$ 200.00' : '$ ****'}
+        <Text className="font-clashmedium text-[26px] tracking-widest text-gray-900">
+          {showBalance ? '$ 232.333' : '$ *****'}
         </Text>
         <Pressable onPress={() => setShowBalance(!showBalance)} className="p-2">
           <Ionicons
