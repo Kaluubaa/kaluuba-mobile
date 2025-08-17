@@ -7,17 +7,17 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-           50: '#f3f0ff',
-          100: '#e9e2ff',
-          200: '#d5c5ff',
-          300: '#b794ff',
-          400: '#9361ff',
-          500: '#5E1FEB', 
-          600: '#4c18cc',
-          700: '#3d12a8',
-          800: '#2f0d85',
-          900: '#230866',
-          950: '#150447',
+          50: '#f2fafa',
+          100: '#d8f0f1',
+          200: '#a9dee0',
+          300: '#75cacc',
+          400: '#3eaeb0',
+          500: '#167D7F', // base
+          600: '#116567',
+          700: '#0d4e50',
+          800: '#093839',
+          900: '#052425',
+          950: '#021414',
         },
       },
       fontFamily: {
@@ -26,7 +26,7 @@ module.exports = {
         jarkatamedium: ['jarkatamedium'],
         jarkatasemibold: ['jarkatarSemibold'],
         jarkatabold: ['jarkatabold'],
-        clashmedium: ['clashmedium']
+        clashmedium: ['clashmedium'],
       },
     },
   },

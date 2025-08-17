@@ -23,18 +23,18 @@ export default function Splash() {
         } else {
           router.replace('/auth');
         }
-      }, 1000); 
+      }, 1000);
 
       return () => clearTimeout(timer);
     }
-  }, [loading, isAuthenticated]); 
+  }, [loading, isAuthenticated]);
 
   return (
-    <SafeAreaView className="flex-1 bg-primary-500">
+    <SafeAreaView className="flex-1 bg-primary-600">
       <Animated.View
         className="flex-1 items-center justify-center p-4"
         style={{ opacity: fadeAnim }}>
-        <Text className="mb-2 font-clashmedium text-2xl text-gray-100">Kaluuba</Text>
+        <Text className="mb-2 font-clashmedium text-2xl text-white">Kaluuba</Text>
         <View className="mt-4 flex-row gap-2">
           <View className="h-2 w-2 animate-bounce rounded-full bg-primary-300" />
           <View className="h-2 w-2 animate-bounce rounded-full bg-primary-200 delay-100" />

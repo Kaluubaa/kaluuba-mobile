@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, Image, ScrollView } from 'react-native';
 import React from 'react';
 import { Container } from '~/components/reusbales/Container';
 import BalanceCard from '~/components/home/BalanceCard';
@@ -7,6 +7,8 @@ import TransactionHistory from '~/components/home/TransactionHistory';
 import SwiperAds from '~/components/home/SwipperAds';
 import { router } from 'expo-router';
 import { useAuth } from '~/context/AuthContext';
+import { images } from '~/constants/images';
+import Recommended from '~/components/home/Recommended';
 
 const Home = () => {
   const { user } = useAuth();
@@ -33,20 +35,24 @@ const Home = () => {
     },
   ];
   return (
-    <Container className="py-6">
+    <Container className="px-2 py-6 ">
       <View className="flex-1 gap-6">
-        <View className="flex-row justify-between">
-          <View className='flex-row items-center gap-2'>
-          <View className="h-12 w-12 rounded-full bg-gray-300"> </View>
-          <Text className='font-jarkatamedium text-gray-600 text-lg'>@{user?.username}</Text>
+        <View className="mb-4 flex-row justify-between">
+          <View className="flex-row items-center gap-2">
+            <View className="h-12 w-12 overflow-hidden rounded-full bg-gray-300">
+              <Image source={images.user} className="h-full w-full" />
+            </View>
+            <Text className="font-jarkatamedium text-gray-600">@ola{user?.username}</Text>
           </View>
 
-          <View className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-600">
+          {/* <View className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-600">
             <Text className="font-clashmedium text-sm text-white">K</Text>
-          </View>
+          </View> */}
         </View>
         <BalanceCard />
-        <View className="flex-row justify-between px-3">
+
+        <Recommended />
+        {/* <View className="flex-row justify-between px-3">
           {actions.map((action, index) => (
             <Pressable onPress={action.onPress} key={index}>
               <View className="h-[48px] w-[48px] items-center justify-center rounded-full bg-white">
@@ -57,7 +63,7 @@ const Home = () => {
               </Text>
             </Pressable>
           ))}
-        </View>
+        </View> */}
         {/* <SwiperAds /> */}
         <TransactionHistory />
       </View>

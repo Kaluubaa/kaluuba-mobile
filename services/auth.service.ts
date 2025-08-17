@@ -11,7 +11,7 @@ export const loginUser = async (data: LoginInput) => {
 };
 
 export const verifyOtp = async (data: VerifyOtpInput) => {
-  return apiPost("/auth/verify/email", data);
+  return apiPost("/auth/verify-email", data);
 };
 
 export const getUser = () => {

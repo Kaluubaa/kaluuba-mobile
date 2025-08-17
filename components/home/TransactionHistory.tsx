@@ -20,7 +20,7 @@ const TransactionHistory = () => {
   return (
     <View className="mt-8 px-2">
       <View className="mb-3 flex-row items-center justify-between">
-        <Text className="font-clashmedium text-gray-800">Recent Transactions</Text>
+        <Text className="font-clashmedium text-gray-600 tracking-wider">Recent Transactions</Text>
         <TouchableOpacity onPress={() => router.push('/history')}>
           <View className="flex-row items-center gap-2">
             <Text className="font-jarkatamedium text-sm text-primary-600">See all</Text>
