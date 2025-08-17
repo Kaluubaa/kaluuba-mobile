@@ -3,11 +3,14 @@ import '../global.css';
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { customFonts } from '../constants/fonts';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { queryClient } from '~/services/api';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastProvider } from '~/context/ToastContext';
+import { AuthProvider } from '~/context/AuthContext';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-export default function Layout() {
+const queryClient = new QueryClient();
+
+export default function RootLayout() {
   const [fontsLoaded] = useFonts(customFonts);
 
   if (!fontsLoaded) {
@@ -16,16 +19,20 @@ export default function Layout() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <GestureHandlerRootView className='flex-1'>
       <ToastProvider>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            headerTitleStyle: {
-              fontFamily: 'jarkataregular',
-            },
-          }}
-        />
+        <AuthProvider>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              headerTitleStyle: {
+                fontFamily: 'jarkataregular',
+              },
+            }}
+          />
+        </AuthProvider>
       </ToastProvider>
+      </GestureHandlerRootView>
     </QueryClientProvider>
   );
 }

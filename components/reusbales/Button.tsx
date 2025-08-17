@@ -24,7 +24,7 @@ export const Button = ({
   children,
 }: ButtonProps) => {
   const baseStyles = 'rounded-lg flex-row items-center justify-center';
-  
+
   const variantStyles = {
     primary: 'bg-primary-500 active:bg-primary-600',
     secondary: 'bg-gray-100 active:bg-gray-200',
@@ -37,8 +37,8 @@ export const Button = ({
     lg: 'px-6 py-3',
   };
 
-  const textBaseStyles = 'text-center font-jarkatamedium';
-  
+  const textBaseStyles = 'text-center flex-row items-center font-jarkatamedium';
+
   const textVariantStyles = {
     primary: 'text-white',
     secondary: 'text-gray-900',
@@ -61,13 +61,9 @@ export const Button = ({
         sizeStyles[size],
         disabled && 'opacity-50',
         className
-      )}
-    >
+      )}>
       {loading ? (
-        <ActivityIndicator 
-          color={variant === 'primary' ? 'white' : '#0c89eb'} 
-          size="small"
-        />
+        <ActivityIndicator color={variant === 'primary' ? 'white' : '#0c89eb'} size="small" />
       ) : (
         <Text
           className={twMerge(
@@ -75,8 +71,7 @@ export const Button = ({
             textVariantStyles[variant],
             textSizeStyles[size],
             textClassName
-          )}
-        >
+          )}>
           {children}
         </Text>
       )}

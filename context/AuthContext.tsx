@@ -1,23 +1,17 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 import { useToast } from './ToastContext';
+import { User } from '~/types/user';
+import { useProfile } from '~/hooks/use-auth';
+import { getUser } from '~/services/auth.service';
 
-interface User {
-  id: string;
-  email: string;
-  username: string;
-}
 
 interface AuthContextProps {
   user: User | null;
+  setUser: (user: User) => void;
   isAuthenticated: boolean;
-  login: (
-    token: string,
-    user: User,
-  ) => void;
+  login: (token: string, user: User) => Promise<void>;
   logout: () => Promise<void>;
-//   refreshToken: () => Promise<void>;
   loading: boolean;
 }
 
@@ -27,26 +21,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
+  // const { data, isLoading } = useProfile()
 
-  const login = async (token: string, user: User) => {
-    await AsyncStorage.setItem('accessToken', token);
-    await AsyncStorage.setItem('user', token);
+  const login = async (token: string, userData: User) => {
+    try {
+      await AsyncStorage.setItem('authToken', token);
+      // setUser(userData);
 
-    //   await AsyncStorage.setItem('refreshToken', refreshToken);
-    setUser(user);
-
-    showToast({
-      type: 'success',
-      message: 'Login Successful',
-      description: `Welcome back, ${user.username}!`,
-    });
+      // showToast({
+      //   type: 'success',
+      //   message: 'Login Successful',
+      //   description: `Welcome back, ${userData.username}!`,
+      // });
+    } catch (error) {
+      showToast({
+        type: 'error',
+        message: 'Login Failed',
+        description: 'Failed to store authentication data.',
+      });
+      throw error;
+    }
   };
 
   const logout = async () => {
     try {
       setLoading(true);
-      await AsyncStorage.removeItem('accessToken');
-      await AsyncStorage.removeItem('refreshToken');
+      await AsyncStorage.removeItem('authToken');
+      await AsyncStorage.removeItem('user');
       setUser(null);
       showToast({
         type: 'info',
@@ -64,47 +65,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-//   const refreshToken = async () => {
-//     try {
-//       const refreshToken = await AsyncStorage.getItem('refreshToken');
-//       if (!refreshToken) throw new Error('No refresh token');
-
-//       const response = await api.post('/refresh-token', { refreshToken });
-//       const { accessToken, refreshToken: newRefreshToken } = response.data;
-
-//       await AsyncStorage.setItem('accessToken', accessToken);
-//       await AsyncStorage.setItem('refreshToken', newRefreshToken);
-//     } catch (error) {
-//       await logout();
-//       throw error;
-//     }
-//   };
-
+  
   useEffect(() => {
     const initializeAuth = async () => {
       try {
         setLoading(true);
-        const accessToken = await AsyncStorage.getItem('accessToken');
-        if (accessToken) {
-          //   const response = await api.get('/user');
-          //   setUser({ id: response.data.id, username: response.data.username });
-          const user = await AsyncStorage.getItem('user');
-          setUser(user);
+        const [token] = await Promise.all([
+          AsyncStorage.getItem('authToken'),
+        ]);
+
+        
+        if (token) {
+          const user = await getUser();
+          setUser(user?.data?.user);
+          console.log('userrr', user)
         }
       } catch (error) {
-        await AsyncStorage.removeItem('accessToken');
-        await AsyncStorage.removeItem('refreshToken');
-        setUser(null);
+        console.error('Failed to initialize auth:', error);
+        await logout();
       } finally {
         setLoading(false);
       }
     };
+
     initializeAuth();
   }, []);
 
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated: !!user, login, logout, loading }}>
+      value={{ user, setUser, isAuthenticated: !!user, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

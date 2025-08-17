@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, View, ViewProps } from 'react-native';
+import { StatusBar, View, ViewProps, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Loader } from './Loader';
 
@@ -20,7 +20,9 @@ export const Container: React.FC<ContainerProps> = ({
   return (
     <View className="relative flex-1">
       <SafeAreaView className={`w-full flex-1 ${className}`} {...props}>
-        <View className="flex-1 px-4 py-2">{children}</View>
+        <View className="flex-1 px-4 py-2">
+          {typeof children === 'string' ? <Text>{children}</Text> : children}
+        </View>
         <StatusBar
           barStyle="dark-content"
           backgroundColor="#eeeeee"

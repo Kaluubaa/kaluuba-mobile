@@ -10,6 +10,8 @@ import { Link, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useLogin } from '~/hooks/use-auth';
 import { useToast } from '~/context/ToastContext';
+import { useAuth } from '~/context/AuthContext';
+import { getUser } from '~/services/auth.service';
 
 const loginSchema = z.object({
   username: z.string().min(2, 'username must be at least 2 chars'),
@@ -31,6 +33,7 @@ const Login = () => {
     },
   });
 
+  const { login, setUser } = useAuth();
   const { mutate, isPending } = useLogin();
   const { showToast } = useToast();
 
@@ -38,18 +41,23 @@ const Login = () => {
     console.log('Login data:', data);
 
     mutate(
-      { username: data.username, password: data.password },
+      { identifier: data.username, password: data.password },
       {
-        onSuccess: (res) => {
+        onSuccess: async (res: any) => {
+          login(res?.data?.token, res?.data?.user);
           console.log(res);
+          // const user = await getUser();
+          // setUser(user?.data?.user);
           router.push({ pathname: '/(tabs)/home' });
         },
-        onError: (err) => {
-          console.log(err.message);
+        onError: (err: any) => {
+          const firstField = Object.keys(err.errors || {})[0];
+          const firstMessage = firstField ? err.errors[firstField] : 'Signup failed';
+
           showToast({
             type: 'error',
-            message: 'Login Failed!',
-            description: err.message,
+            message: err.message,
+            description: firstMessage || 'Please try again later',
           });
         },
       }

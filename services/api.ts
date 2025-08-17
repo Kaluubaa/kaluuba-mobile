@@ -1,18 +1,18 @@
-import axios, { AxiosRequestConfig, isAxiosError, Method } from "axios";
-import { QueryClient } from "@tanstack/react-query";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios, { AxiosRequestConfig, isAxiosError, Method } from 'axios';
+import { QueryClient } from '@tanstack/react-query';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const api = axios.create({
-  baseURL: "https://kaluuba-api.onrender.com/api",
+  baseURL: 'http://localhost:3030/api/v1',
   timeout: 30000,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
 api.interceptors.request.use(
   async (config) => {
-    const token = await AsyncStorage.getItem("authToken");
+    const token = await AsyncStorage.getItem('authToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -46,9 +46,13 @@ export async function apiRequest<T = any>(
     });
 
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
+    // console.log('hmmmm', error);
     if (isAxiosError(error)) {
-      throw new Error(error.response?.data?.error || error.message);
+      const backendError = error.response?.data;
+
+      // console.log('Backend error:', backendError);
+      throw backendError || error.message;
     }
 
     throw error;
@@ -56,19 +60,13 @@ export async function apiRequest<T = any>(
 }
 
 export const apiGet = <T>(endpoint: string, config?: AxiosRequestConfig) =>
-  apiRequest<T>("get", endpoint, undefined, config);
+  apiRequest<T>('get', endpoint, undefined, config);
 
-export const apiPost = <T>(
-  endpoint: string,
-  data?: any,
-  config?: AxiosRequestConfig
-) => apiRequest<T>("post", endpoint, data, config);
+export const apiPost = <T>(endpoint: string, data?: any, config?: AxiosRequestConfig) =>
+  apiRequest<T>('post', endpoint, data, config);
 
-export const apiPatch = <T>(
-  endpoint: string,
-  data?: any,
-  config?: AxiosRequestConfig
-) => apiRequest<T>("patch", endpoint, data, config);
+export const apiPatch = <T>(endpoint: string, data?: any, config?: AxiosRequestConfig) =>
+  apiRequest<T>('patch', endpoint, data, config);
 
 export const apiDelete = <T>(endpoint: string, config?: AxiosRequestConfig) =>
-  apiRequest<T>("delete", endpoint, undefined, config);
+  apiRequest<T>('delete', endpoint, undefined, config);

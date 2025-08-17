@@ -1,6 +1,7 @@
-import { useMutation } from '@tanstack/react-query';
-import { registerUser, loginUser, verifyOtp } from '~/services/auth.service';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { registerUser, loginUser, verifyOtp, getUser } from '~/services/auth.service';
 import { LoginInput, RegisterInput, VerifyOtpInput } from '~/types/auth.t';
+import { ProfileResponse } from '~/types/user';
 
 export function useRegister() {
   return useMutation({
@@ -19,3 +20,10 @@ export function useVerifyOtp() {
     mutationFn: (data: VerifyOtpInput) => verifyOtp(data),
   });
 }
+
+export const useProfile = () => {
+  return useQuery<ProfileResponse>({
+    queryKey: ['profile'],
+    queryFn: getUser,
+  });
+}; 

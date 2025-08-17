@@ -1,5 +1,6 @@
 import { LoginInput, RegisterInput, VerifyOtpInput } from "~/types/auth.t";
-import { apiPost } from "./api";
+import { ProfileResponse } from "~/types/user";
+import { apiGet, apiPost } from "./api";
 
 export const registerUser = async (data: RegisterInput) => {
   return apiPost("/auth/register", data);
@@ -10,5 +11,9 @@ export const loginUser = async (data: LoginInput) => {
 };
 
 export const verifyOtp = async (data: VerifyOtpInput) => {
-  return apiPost("/auth/verify/email", data);
+  return apiPost("/auth/verify-email", data);
+};
+
+export const getUser = () => {
+  return apiGet<any>("/user/profile/me");
 };
