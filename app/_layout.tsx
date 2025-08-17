@@ -19,7 +19,7 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <GestureHandlerRootView>
+      <GestureHandlerRootView className='flex-1'>
       <ToastProvider>
         <AuthProvider>
           <Stack

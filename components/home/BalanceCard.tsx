@@ -1,5 +1,5 @@
 import { View, Text, Pressable, Image } from 'react-native';
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { images } from '~/constants/images';
 import { router } from 'expo-router';
@@ -29,6 +29,7 @@ const BalanceCard = (props: Props) => {
       onPress: () => console.log('Withdraw pressed'),
     },
   ];
+
 
   const [showBalance, setShowBalance] = React.useState<boolean>(false);
   return (
@@ -74,6 +75,8 @@ const BalanceCard = (props: Props) => {
           </Pressable>
         ))}
       </View>
+
+     
     </View>
   );
 };

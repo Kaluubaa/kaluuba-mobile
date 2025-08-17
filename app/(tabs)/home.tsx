@@ -1,5 +1,6 @@
 import { View, Text, Pressable, Image, ScrollView } from 'react-native';
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
+
 import { Container } from '~/components/reusbales/Container';
 import BalanceCard from '~/components/home/BalanceCard';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,6 +10,7 @@ import { router } from 'expo-router';
 import { useAuth } from '~/context/AuthContext';
 import { images } from '~/constants/images';
 import Recommended from '~/components/home/Recommended';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 
 const Home = () => {
   const { user } = useAuth();
@@ -34,20 +36,31 @@ const Home = () => {
       onPress: () => console.log('Withdraw pressed'),
     },
   ];
+
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const snapPoints = ['30%', '60%'];
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
   return (
-    <Container className="px-2 py-6 ">
+    <Container className="flex-1 px-2 py-6 ">
       <View className="flex-1 gap-6">
         <View className="mb-4 flex-row justify-between">
           <View className="flex-row items-center gap-2">
-            <View className="h-12 w-12 overflow-hidden rounded-full bg-gray-300">
+            <View className="h-12 w-12 overflow-hidden rounded-full  border border-primary-500 bg-primary-300">
               <Image source={images.user} className="h-full w-full" />
             </View>
-            <Text className="font-jarkatamedium text-gray-600">@ola{user?.username}</Text>
+            <View className='gap-0.5'>
+            <Text className="font-jarkatasemibold text-primary-600">@ola{user?.username}</Text>
+            <Text className="font-jarkatamedium text-xs text-gray-600">Money is energy, direct it with purpose</Text>
+
+            </View>
           </View>
 
-          {/* <View className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-600">
-            <Text className="font-clashmedium text-sm text-white">K</Text>
-          </View> */}
+          <View className="flex size-10 relative items-center justify-center rounded-full bg-primary-600">
+            <Ionicons name='notifications-outline' size={20} color={'#ffffff'} />
+            <View className="absolute right-0 top-1 size-3 rounded-full bg-red-500" />
+          </View>
         </View>
         <BalanceCard />
 
@@ -67,6 +80,18 @@ const Home = () => {
         {/* <SwiperAds /> */}
         <TransactionHistory />
       </View>
+
+      <BottomSheet ref={bottomSheetRef}
+      index={-1}
+      snapPoints={snapPoints}
+      onChange={handleSheetChanges}
+      enablePanDownToClose={true}
+      bottomInset={60}
+      backgroundStyle={{ backgroundColor: '#ffffff', borderTopLeftRadius: 16, borderTopRightRadius: 16 }}>
+        <BottomSheetView className="flex-1 items-center justify-center p-6">
+          <Text>Awesome 🎉</Text>
+        </BottomSheetView>
+      </BottomSheet>
     </Container>
   );
 };

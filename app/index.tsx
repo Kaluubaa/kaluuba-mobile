@@ -21,7 +21,7 @@ export default function Splash() {
         if (isAuthenticated) {
           router.replace('/(tabs)/home');
         } else {
-          router.replace('/(tabs)/home');
+          router.replace('/auth/authoption');
         }
       }, 1000);
 

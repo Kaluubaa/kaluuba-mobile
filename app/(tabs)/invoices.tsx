@@ -8,7 +8,7 @@ import { useGetUserInvoices } from '~/hooks/use-invoice';
 const InvoicesPage = () => {
   const { data } = useGetUserInvoices();
 
-  const tabs = ['invoices', 'customers'];
+  const tabs = ['invoices', 'Clients'];
 
   const [activeTab, setActiveTab] = React.useState(tabs[0]);
 
@@ -22,7 +22,7 @@ const InvoicesPage = () => {
   return (
     <Container className="flex-1 px-2 py-4">
       <View className="flex gap-4">
-        <Ionicons name="chevron-back" size={20} />
+        {/* <Ionicons name="chevron-back" size={20} /> */}
         <Text className="font-clashmedium text-lg tracking-wider text-gray-600">Invoices</Text>
       </View>
 
