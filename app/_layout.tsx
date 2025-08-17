@@ -6,6 +6,7 @@ import { customFonts } from '../constants/fonts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastProvider } from '~/context/ToastContext';
 import { AuthProvider } from '~/context/AuthContext';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <GestureHandlerRootView>
       <ToastProvider>
         <AuthProvider>
           <Stack
@@ -30,6 +32,7 @@ export default function RootLayout() {
           />
         </AuthProvider>
       </ToastProvider>
+      </GestureHandlerRootView>
     </QueryClientProvider>
   );
 }

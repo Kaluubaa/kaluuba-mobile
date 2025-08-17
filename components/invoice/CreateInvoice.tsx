@@ -9,15 +9,20 @@ import { useToast } from '~/context/ToastContext';
 import { router } from 'expo-router';
 
 const createInvoiceSchema = z.object({
+  clientname: z.string().min(1, 'Customer name is required'),
+  clientemail: z.string().email('Invalid email address'),
   title: z.string().min(1, 'Title is required'),
   currency: z.string().min(1, 'Currency is required'),
-  items: z.array(
-    z.object({
-      description: z.string().min(1, 'Description is required'),
-      amount: z.number().min(0, 'Amount must be greater than 0'),
-      quantity: z.number().min(1, 'Quantity must be at least 1'),
-    })
-  ).min(1, 'At least one item is required'),
+  duedate: z.string().optional(),
+  items: z
+    .array(
+      z.object({
+        description: z.string().min(1, 'Description is required'),
+        amount: z.number().min(0, 'Amount must be greater than 0'),
+        quantity: z.number().min(1, 'Quantity must be at least 1'),
+      })
+    )
+    .min(1, 'At least one item is required'),
 });
 
 type CreateInvoiceFormData = z.infer<typeof createInvoiceSchema>;
@@ -70,27 +75,75 @@ export const CreateInvoice = () => {
   };
 
   return (
-    <ScrollView className="flex-1 bg-gray-50">
-      <View className="p-4">
-        <View className="mb-6 flex-row items-center justify-between">
-          <Text className="font-clashmedium text-2xl text-gray-900">Create Invoice</Text>
-          <Pressable
-            onPress={() => router.back()}
-            className="flex-row items-center rounded-full bg-gray-100 px-4 py-2">
-            <Ionicons name="close" size={20} color="#374151" />
-            <Text className="ml-2 font-jarkatamedium text-gray-700">Cancel</Text>
-          </Pressable>
-        </View>
+    <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+      <View className="">
+        <View className="">
+          <View className="flex-row items-center gap-6  py-6">
+            <Text className="font-jarkatasemibold font-semibold text-gray-400 text-xs">YOUR CLIENT&apos;S INFORMATION</Text>
+            <View className="flex-1 border-b border-gray-200" />
+          </View>
 
-        <View className="rounded-xl bg-white p-4 shadow-sm">
+          <Controller
+            control={control}
+            name="clientname"
+            render={({ field: { onChange, value } }) => (
+              <View className="mb-4">
+                <Text className="mb-2 font-jarkatamedium text-sm text-gray-500">
+                  Client&apos;s Name
+                </Text>
+                <TextInput
+                  className="rounded-lg border border-gray-200  px-4 py-3 font-jarkataregular text-sm"
+                  placeholder="Enter customer name"
+                  value={value}
+                  onChangeText={onChange}
+                />
+                {errors.clientname && (
+                  <Text className="mt-1 font-jarkataregular text-sm text-red-500">
+                    {errors.clientname.message}
+                  </Text>
+                )}
+              </View>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="clientemail"
+            render={({ field: { onChange, value } }) => (
+              <View className="mb-4">
+                <Text className="mb-2 font-jarkatamedium text-sm text-gray-500">
+                  Client&apos;s Email
+                </Text>
+                <TextInput
+                  className="rounded-lg border border-gray-200 px-4 py-3 font-jarkataregular text-sm"
+                  placeholder="Enter customer email"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  value={value}
+                  onChangeText={onChange}
+                />
+                {errors.clientemail && (
+                  <Text className="mt-1 font-jarkataregular text-sm text-red-500">
+                    {errors.clientemail.message}
+                  </Text>
+                )}
+              </View>
+            )}
+          />
+
+          <View className="flex-row items-center gap-6  py-6">
+            <Text className="font-jarkatasemibold font-semibold text-gray-400 text-xs">INVOICE DETAILS</Text>
+            <View className="flex-1 border-b border-gray-200" />
+          </View>
+
           <Controller
             control={control}
             name="title"
             render={({ field: { onChange, value } }) => (
               <View className="mb-4">
-                <Text className="mb-2 font-jarkatamedium text-gray-700">Title</Text>
+                <Text className="mb-2 font-jarkatamedium text-gray-500 text-sm">Invoice Title</Text>
                 <TextInput
-                  className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 font-jarkataregular"
+                  className="rounded-lg border border-gray-200  px-4 py-3 font-jarkataregular text-sm"
                   placeholder="Enter invoice title"
                   value={value}
                   onChangeText={onChange}
@@ -109,9 +162,9 @@ export const CreateInvoice = () => {
             name="currency"
             render={({ field: { onChange, value } }) => (
               <View className="mb-4">
-                <Text className="mb-2 font-jarkatamedium text-gray-700">Currency</Text>
+                <Text className="mb-2 font-jarkatamedium text-gray-500 text-sm">Currency</Text>
                 <TextInput
-                  className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 font-jarkataregular"
+                  className="rounded-lg border border-gray-200 px-4 py-3 font-jarkataregular text-sm"
                   placeholder="Enter currency"
                   value={value}
                   onChangeText={onChange}
@@ -125,15 +178,34 @@ export const CreateInvoice = () => {
             )}
           />
 
+          <Controller
+            control={control}
+            name="duedate"
+            render={({ field: { onChange, value } }) => (
+              <View className="mb-4">
+                <Text className="mb-2 font-jarkatamedium text-gray-500 text-sm">Due Date</Text>
+                <TextInput
+                  className="rounded-lg border border-gray-200 px-4 py-3 font-jarkataregular text-sm"
+                  placeholder="YYYY-MM-DD"
+                  value={value}
+                  onChangeText={onChange}
+                  
+                />
+                {errors.duedate && (
+                  <Text className="mt-1 font-jarkataregular text-sm text-red-500">
+                    {errors.duedate.message}
+                  </Text>
+                )}
+              </View>
+            )}
+          />
           <Text className="mb-4 font-jarkatamedium text-gray-700">Items</Text>
           {fields.map((field, index) => (
             <View key={field.id} className="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
               <View className="mb-4 flex-row items-center justify-between">
                 <Text className="font-jarkatamedium text-gray-700">Item {index + 1}</Text>
                 {fields.length > 1 && (
-                  <Pressable
-                    onPress={() => remove(index)}
-                    className="rounded-full bg-red-100 p-2">
+                  <Pressable onPress={() => remove(index)} className="rounded-full bg-red-100 p-2">
                     <Ionicons name="trash-outline" size={20} color="#EF4444" />
                   </Pressable>
                 )}
@@ -227,4 +299,4 @@ export const CreateInvoice = () => {
       </View>
     </ScrollView>
   );
-}; 
+};

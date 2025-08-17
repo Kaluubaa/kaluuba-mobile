@@ -4,8 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { format } from 'date-fns';
 import { Invoice } from '~/types/invoice.t';
 import { router } from 'expo-router';
-
-
+import { Button } from '../reusbales/Button';
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -21,25 +20,30 @@ const getStatusColor = (status: string) => {
 };
 
 const getTotalAmount = (items: Invoice['items']) => {
-  return items.reduce((total, item) => total + (item.amount * item.quantity), 0);
+  return items.reduce((total, item) => total + item.amount * item.quantity, 0);
 };
 
 export const InvoiceList = ({ invoices }: { invoices: Invoice[] }) => {
- console.log('listtttt',invoices)
+  console.log('listtttt', invoices);
   return (
     <ScrollView className="flex-1 ">
-      <View className="">
-        <View className="mb-6 flex-row items-center justify-between">
-          <Text className="font-clashmedium text-xl text-gray-900"></Text>
-          <Pressable 
+      <View className="flex-1 items-center justify-center gap-4 pt-52">
+        <Ionicons name="document-text" size={24} color="#9ca3af" />
+        <Text className="font-jarkatamedium text-gray-400">You have not created any invoice</Text>
+
+        <Button size="sm" className="py-2.5 px-6" textClassName='flex-row ' onPress={() => router.push('/invoices/create')}>
+          Create invoice
+          {/* <Ionicons name="add" size={15} color="#9ca3af" /> */}
+        </Button>
+        {/* <Pressable 
             onPress={() => router.push('/invoices/create')}
             className="flex-row items-center rounded-lg bg-gray-800 px-4 py-2">
             <Ionicons name="add" size={18} color="white" />
             <Text className="ml-2 font-jarkatamedium text-white text-sm">New Invoice</Text>
-          </Pressable>
-        </View>
-
-        {invoices?.map((invoice) => (
+          </Pressable> */}
+      </View>
+      <View className="flex-1 px-4">
+        {/* {invoices?.map((invoice) => (
          <Pressable
          key={invoice?.id}
          className="mb-4 overflow-hidden rounded-xl bg-white px-4 py-5 shadow-sm"
@@ -63,8 +67,8 @@ export const InvoiceList = ({ invoices }: { invoices: Invoice[] }) => {
          </View>
          
        </Pressable>
-        ))}
+        ))} */}
       </View>
     </ScrollView>
   );
-}; 
+};
