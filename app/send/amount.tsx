@@ -3,14 +3,16 @@ import React, { useState } from 'react';
 import Header from '~/components/reusbales/Header';
 import { Container } from '~/components/reusbales/Container';
 import { NumericKeypad } from '~/components/reusbales/NumericKeypad';
-import { useLocalSearchParams } from 'expo-router';
-import { useGetUserBalance } from '~/hooks/use-transactions';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useGetUserBalance, useSendToken } from '~/hooks/use-transactions';
 import { Button } from '~/components/reusbales/Button';
 
 const Amount = () => {
   const { kaluubaName, coin } = useLocalSearchParams();
   const [amount, setAmount] = useState('0.00');
   const { data: balance } = useGetUserBalance();
+
+  const { mutate: send, isPending: isSending } = useSendToken();
 
   const handleKeypadPress = (key: string) => {
     if (key === '<') {
@@ -29,8 +31,27 @@ const Amount = () => {
       });
     }
   };
+
+  const handleSubmit = () => {
+    send(
+      {
+        recipientIdentifier: kaluubaName as string,
+        tokenSymbol: coin as string,
+        amount: parseFloat(amount),
+      },
+      {
+        onSuccess: (res) => {
+          console.log('Transaction successful:', res);
+          router.replace('/send/success')
+        },
+        onError: (error) => {
+          console.error('Transaction failed:', error);
+        },
+      }
+    );
+  };
   return (
-    <Container className="flex-1 bg-gray-50 px-2">
+    <Container className="flex-1 bg-gray-50 px-2" loading={isSending}>
       <Header title="Enter Amount" />
       <View className="flex-1 items-center justify-center">
         <View className="mb-4 rounded-xl border border-primary-200 bg-primary-100 px-6 py-2 text-sm">
@@ -47,7 +68,7 @@ const Amount = () => {
           <NumericKeypad onKeyPress={handleKeypadPress} />
         </View>
 
-        <Button className="my-6 h-[50px]" disabled={amount === '0.00'}>
+        <Button className="my-6 h-[50px]" onPress={handleSubmit} disabled={amount === '0.00'}>
           Continue
         </Button>
       </View>
