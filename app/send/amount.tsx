@@ -8,23 +8,23 @@ import { useGetUserBalance } from '~/hooks/use-transactions';
 import { Button } from '~/components/reusbales/Button';
 
 const Amount = () => {
-    const { kaluubaName, coin } = useLocalSearchParams();
+  const { kaluubaName, coin } = useLocalSearchParams();
   const [amount, setAmount] = useState('0.00');
   const { data: balance } = useGetUserBalance();
 
   const handleKeypadPress = (key: string) => {
     if (key === '<') {
       setAmount((prev) => {
-        const num = parseFloat(prev.replace('.', '')) / 100; 
-        const newNum = Math.floor(num * 10) / 100; 
-        return newNum.toFixed(2); 
+        const num = parseFloat(prev.replace('.', '')) / 100;
+        const newNum = Math.floor(num * 10) / 100;
+        return newNum.toFixed(2);
       });
     } else if (key === '.') {
       return;
     } else {
       setAmount((prev) => {
-        const num = parseFloat(prev.replace('.', '')) / 100; 
-        const newNum = num * 10 + parseInt(key) / 100; 
+        const num = parseFloat(prev.replace('.', '')) / 100;
+        const newNum = num * 10 + parseInt(key) / 100;
         return newNum.toFixed(2);
       });
     }
@@ -37,17 +37,19 @@ const Amount = () => {
           <Text className="font-jarkataregular text-gray-600 ">Recipient - @{kaluubaName}</Text>
         </View>
         <Text className="mb-6 mt-4 font-clashmedium text-4xl tracking-wider">
-          {amount || '0.00'}
+          {amount || '0.00'} {coin}
         </Text>
 
-        <Text className='font-jarkatasemibold'>Your Balance: 10.00</Text>
+        <Text className="font-jarkatasemibold">Your Balance: 10.00</Text>
       </View>
       <View className="mt-auto">
         <View className="mt-10 items-center">
           <NumericKeypad onKeyPress={handleKeypadPress} />
         </View>
 
-        <Button className='my-6 h-[50px]' disabled={!amount || parseFloat(amount) > (balance || 0)}>Continue</Button>
+        <Button className="my-6 h-[50px]" disabled={amount === '0.00'}>
+          Continue
+        </Button>
       </View>
     </Container>
   );

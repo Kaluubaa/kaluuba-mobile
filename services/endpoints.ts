@@ -11,7 +11,8 @@ const endpoints = {
     transactions: {
         getBalance: '/transactions/balances',
         getTransactionHistory: '/transactions/history',
-        validateRecipient: '/transactions/validate-recipient'
+        validateRecipient: '/transactions/validate-recipient',
+        send: '/transactions/send'
     }
 };
 
