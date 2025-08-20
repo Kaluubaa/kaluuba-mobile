@@ -29,9 +29,9 @@ const BalanceCard = ({ balances, loadingBalance, openRecieveSheet }: Props) => {
       onPress: openRecieveSheet,
     },
     {
-      title: 'Withdraw',
+      title: 'Send',
       icon: 'arrow-up-outline',
-      onPress: () => console.log('Withdraw pressed'),
+      onPress: () => router.push('/send/send'),
     },
   ];
 

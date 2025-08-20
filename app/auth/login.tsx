@@ -46,8 +46,9 @@ const Login = () => {
         onSuccess: async (res: any) => {
           login(res?.data?.token, res?.data?.user);
           console.log(res);
-          // const user = await getUser();
-          setUser(res?.data?.user);
+          const user = await getUser();
+          // console.log(user?.data?.user)
+          setUser(user?.data?.user);
           router.push({ pathname: '/(tabs)/home' });
         },
         onError: (err: any) => {
