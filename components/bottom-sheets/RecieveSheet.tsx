@@ -18,14 +18,14 @@ const ReceiveSheet = ({ onClose, usdcAddress }: Props) => {
   const { user } = useAuth();
 
   const copyToClipboard = async () => {
-    await Clipboard.setStringAsync(user?.walletAddress || '');
+    await Clipboard.setStringAsync(user?.smartAccountAddress || '');
     Alert.alert('Copied', 'Wallet address copied to clipboard');
   };
 
 
 
 const handleShare = async () => {
-  const message = `Hi, wire my aza with USDC on Base.\nHere's my wallet address: ${user?.walletAddress}\n\nOr you can use my Kaluuba tag @${user?.username} if you're using the Kaluuba app.`;
+  const message = `Hi, wire my aza with USDC on Base.\nHere's my wallet address: ${user?.smartAccountAddress}\n\nOr you can use my Kaluuba tag @${user?.username} if you're using the Kaluuba app.`;
   try {
     await Share.share({ message });
   } catch (error) {

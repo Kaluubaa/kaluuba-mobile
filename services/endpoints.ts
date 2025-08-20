@@ -10,7 +10,8 @@ const endpoints = {
 
     transactions: {
         getBalance: '/transactions/balances',
-        getTransactionhistory: '/transactions/history',
+        getTransactionHistory: '/transactions/history',
+        validateRecipient: '/transactions/validate-recipient'
     }
 };
 

@@ -13,7 +13,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ title, onBack, showBack = true, className = '' }) => {
   const router = useRouter();
   return (
-    <View className={`flex-row items-center gap-2 py-4 px-2  ${className}`}>
+    <View className={`flex-row items-center gap-2 py-4  ${className}`}>
       {showBack && (
         <TouchableOpacity
           onPress={onBack ? onBack : () => router.back()}

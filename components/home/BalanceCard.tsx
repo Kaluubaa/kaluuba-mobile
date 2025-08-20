@@ -79,7 +79,7 @@ const BalanceCard = ({ balances, loadingBalance, openRecieveSheet }: Props) => {
       <View className="mt-8 flex-row gap-10 px-3">
         {actions.map((action, index) => (
           <Pressable className="items-center" onPress={action.onPress} key={index}>
-            <View className="shadow-xs h-[40px] w-[40px] items-center justify-center rounded-full border border-gray-200 bg-white">
+            <View className="shadow-xs h-[45px] w-[45px] items-center justify-center rounded-full border border-gray-200 bg-white">
               <Ionicons name={action.icon as keyof typeof Ionicons.glyphMap} size={15} />
             </View>
             <Text className="mt-2 text-center font-jarkataregular text-xs text-gray-800">

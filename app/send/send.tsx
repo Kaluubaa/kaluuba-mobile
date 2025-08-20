@@ -21,6 +21,8 @@ const Send = () => {
       onPress: () => router.push({ pathname: '/send/bank' }),
     },
   ];
+
+  
   return (
     <Container className="flex-1 bg-gray-50 px-2">
       {/* <Image
