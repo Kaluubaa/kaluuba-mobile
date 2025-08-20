@@ -15,5 +15,5 @@ export const verifyOtp = async (data: VerifyOtpInput) => {
 };
 
 export const getUser = () => {
-  return apiGet<any>("/user/profile/me");
+  return apiGet<any>("/user");
 };

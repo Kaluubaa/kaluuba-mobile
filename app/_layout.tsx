@@ -19,19 +19,31 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <GestureHandlerRootView className='flex-1'>
-      <ToastProvider>
-        <AuthProvider>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              headerTitleStyle: {
-                fontFamily: 'jarkataregular',
-              },
-            }}
-          />
-        </AuthProvider>
-      </ToastProvider>
+      <GestureHandlerRootView className="flex-1">
+        <ToastProvider>
+          <AuthProvider>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                headerTitleStyle: {
+                  fontFamily: 'jarkataregular',
+                },
+              }}>
+              <Stack.Screen
+                name="index"
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name="scan"
+                options={{
+                  headerShown: false,
+                }}
+              />
+            </Stack>
+          </AuthProvider>
+        </ToastProvider>
       </GestureHandlerRootView>
     </QueryClientProvider>
   );

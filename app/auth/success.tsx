@@ -24,8 +24,8 @@ const Success = () => {
             Here&apos;s your wallet!
           </Text>
 
-          <View className='gap-4'>
-            <View className=" flex-row items-center bg-white gap-6 rounded-full  px-4 py-3">
+          <View className="gap-4">
+            <View className=" flex-row items-center gap-6 rounded-full bg-white  px-4 py-3">
               <View className="h-10 w-10 items-center justify-center rounded-full bg-teal-800/20">
                 <Ionicons name="wallet" size={18} color="#115e59" className="text-teal-800" />
               </View>
@@ -105,7 +105,7 @@ const Success = () => {
           size="lg"
           className="mt-auto w-full rounded-full bg-teal-800 px-4 py-4 "
           textClassName="font-sofia-regular text-base text-white"
-          onPress={() => router.replace('/auth/login')}>
+          onPress={() => router.replace('/(tabs)/home')}>
           Secure your account
         </Button>
       </View>

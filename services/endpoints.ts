@@ -7,6 +7,11 @@ const endpoints = {
         forgotPassword: '/auth/forgot-password',
         resetPassword: '/auth/reset-password',
     },
+
+    transactions: {
+        getBalance: '/transactions/balances',
+        getTransactionhistory: '/transactions/history',
+    }
 };
 
 export default endpoints;

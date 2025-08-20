@@ -11,6 +11,8 @@ import { useAuth } from '~/context/AuthContext';
 import { images } from '~/constants/images';
 import Recommended from '~/components/home/Recommended';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import { useGetUserBalance } from '~/hooks/use-transactions';
+import ReceiveSheet from '~/components/bottom-sheets/RecieveSheet';
 
 const Home = () => {
   const { user } = useAuth();
@@ -37,35 +39,54 @@ const Home = () => {
     },
   ];
 
+  const { data, isLoading } = useGetUserBalance();
+
+  const balances = data?.data?.balances?.balances;
+
+  console.log('hmm', balances);
+
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = ['30%', '60%'];
+  const snapPoints = ['30%', '70%'];
   const handleSheetChanges = useCallback((index: number) => {
     console.log('handleSheetChanges', index);
   }, []);
+
   return (
-    <Container className="flex-1 px-2 py-6 ">
-      <View className="flex-1 gap-6">
-        <View className="mb-4 flex-row justify-between">
-          <View className="flex-row items-center gap-2">
-            <View className="h-12 w-12 overflow-hidden rounded-full  border border-primary-500 bg-primary-300">
-              <Image source={images.user} className="h-full w-full" />
+    <View style={{ flex: 1 }}>
+      <Container className="flex-1 px-2 py-6 ">
+        <View className="flex-1 gap-6">
+          <View className="mb-4 flex-row justify-between">
+            <View className="flex-row items-center gap-2">
+              <View className="h-12 w-12 overflow-hidden rounded-full  border border-primary-500 bg-primary-300">
+                <Image source={images.user} className="h-full w-full" />
+              </View>
+              <View className="gap-0.5">
+                <Text className="font-jarkatasemibold text-primary-600">@{user?.username}</Text>
+                <Text className="font-jarkatamedium text-xs text-gray-600">
+                  Money is energy, direct it with purpose
+                </Text>
+              </View>
             </View>
-            <View className='gap-0.5'>
-            <Text className="font-jarkatasemibold text-primary-600">@ola{user?.username}</Text>
-            <Text className="font-jarkatamedium text-xs text-gray-600">Money is energy, direct it with purpose</Text>
 
+            <View className="relative flex size-10 items-center justify-center rounded-full bg-primary-600">
+              <Ionicons name="notifications-outline" size={20} color={'#ffffff'} />
+              <View className="absolute right-0 top-1 size-3 rounded-full bg-red-500" />
             </View>
           </View>
+          <BalanceCard
+            openRecieveSheet={bottomSheetRef.current?.expand}
+            balances={balances}
+            loadingBalance={isLoading}
+          />
 
-          <View className="flex size-10 relative items-center justify-center rounded-full bg-primary-600">
-            <Ionicons name='notifications-outline' size={20} color={'#ffffff'} />
-            <View className="absolute right-0 top-1 size-3 rounded-full bg-red-500" />
-          </View>
-        </View>
-        <BalanceCard />
+          <Recommended />
 
-        <Recommended />
-        {/* <View className="flex-row justify-between px-3">
+          {/* <Pressable
+          onPress={() => bottomSheetRef.current?.expand()}
+          className="mb-4 items-center justify-center rounded bg-primary-600 py-2">
+          <Text className="font-jarkatamedium text-white">Open Bottom Sheet</Text>
+        </Pressable> */}
+          {/* <View className="flex-row justify-between px-3">
           {actions.map((action, index) => (
             <Pressable onPress={action.onPress} key={index}>
               <View className="h-[48px] w-[48px] items-center justify-center rounded-full bg-white">
@@ -77,22 +98,36 @@ const Home = () => {
             </Pressable>
           ))}
         </View> */}
-        {/* <SwiperAds /> */}
-        <TransactionHistory />
-      </View>
+          {/* <SwiperAds /> */}
+          <TransactionHistory />
+        </View>
+      </Container>
 
-      <BottomSheet ref={bottomSheetRef}
-      index={-1}
-      snapPoints={snapPoints}
-      onChange={handleSheetChanges}
-      enablePanDownToClose={true}
-      bottomInset={60}
-      backgroundStyle={{ backgroundColor: '#ffffff', borderTopLeftRadius: 16, borderTopRightRadius: 16 }}>
-        <BottomSheetView className="flex-1 items-center justify-center p-6">
-          <Text>Awesome 🎉</Text>
-        </BottomSheetView>
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+        enablePanDownToClose={true}
+        bottomInset={0}
+        backgroundStyle={{
+          backgroundColor: '#ffffff',
+          borderTopLeftRadius: 54,
+          borderTopRightRadius: 54,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: 0.12,
+          shadowRadius: 16,
+          elevation: 12,
+        }}
+        // style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}
+      >
+        <ReceiveSheet
+          usdcAddress={(balances && balances[0]?.tokenAddress) || ''}
+          onClose={() => bottomSheetRef.current?.close()}
+        />
       </BottomSheet>
-    </Container>
+    </View>
   );
 };
 

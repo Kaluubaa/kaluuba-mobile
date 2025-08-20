@@ -47,10 +47,12 @@ const Login = () => {
           login(res?.data?.token, res?.data?.user);
           console.log(res);
           // const user = await getUser();
-          // setUser(user?.data?.user);
+          setUser(res?.data?.user);
           router.push({ pathname: '/(tabs)/home' });
         },
         onError: (err: any) => {
+          console.log(err);
+
           const firstField = Object.keys(err.errors || {})[0];
           const firstMessage = firstField ? err.errors[firstField] : 'Signup failed';
 

@@ -19,3 +19,13 @@ export interface User {
 export interface ProfileResponse {
   user: User;
 } 
+
+export interface Balance {
+  decimals: number;
+  formatted: string;
+  network: string;
+  raw: string;
+  symbol: string;
+  tokenAddress: string;
+  usdValue: string;
+}

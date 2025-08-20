@@ -9,6 +9,7 @@ import { OTPInput } from '~/components/reusbales/OtpInput';
 import { useVerifyOtp } from '~/hooks/use-auth';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useToast } from '~/context/ToastContext';
+import { useAuth } from '~/context/AuthContext';
 
 const otpSchema = z.object({
   otp: z.string().length(6, 'Enter the 6-digit code'),
@@ -27,21 +28,24 @@ const VerifyOtp = () => {
     defaultValues: { otp: '' },
   });
 
+  const { login, setUser } = useAuth();
+
   const { mutate, isPending } = useVerifyOtp();
-    const { showToast } = useToast();
-  
+  const { showToast } = useToast();
+
   const onSubmit = (data: OtpFormData) => {
     console.log('OTP submitted:', data.otp);
     mutate(
       { email: email as string, otp: data.otp },
       {
-        onSuccess: (res) => {
+        onSuccess: (res: any) => {
           console.log(res);
           router.push('/auth/success');
+          login(res?.data?.token, res?.data?.user);
         },
         onError: (err) => {
           console.log(err);
-          showToast({ message: err.message, type: "error" })
+          showToast({ message: err.message, type: 'error' });
         },
       }
     );

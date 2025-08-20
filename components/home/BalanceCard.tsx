@@ -3,10 +3,15 @@ import React, { useCallback, useRef } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { images } from '~/constants/images';
 import { router } from 'expo-router';
+import { Balance } from '~/types/user';
 
-type Props = {};
+type Props = {
+  balances: Balance[];
+  loadingBalance: boolean;
+  openRecieveSheet: any;
+};
 
-const BalanceCard = (props: Props) => {
+const BalanceCard = ({ balances, loadingBalance, openRecieveSheet }: Props) => {
   const actions = [
     // {
     //   title: 'Invoice',
@@ -16,12 +21,12 @@ const BalanceCard = (props: Props) => {
     {
       title: 'Kaluuba Scan',
       icon: 'scan-outline',
-      onPress: () => console.log('Scan pressed'),
+      onPress: () => router.push('/scan'),
     },
     {
       title: 'Recieve',
       icon: 'arrow-down-outline',
-      onPress: () => console.log('Add pressed'),
+      onPress: openRecieveSheet,
     },
     {
       title: 'Withdraw',
@@ -30,8 +35,10 @@ const BalanceCard = (props: Props) => {
     },
   ];
 
+  const usdc = balances && balances[0];
 
   const [showBalance, setShowBalance] = React.useState<boolean>(false);
+
   return (
     <View className="bg--500 relative flex min-h-[150px] w-full items-center rounded-xl bg-white py-6">
       <Image
@@ -52,7 +59,13 @@ const BalanceCard = (props: Props) => {
 
       <View className="mt-6 flex-row items-center gap-2">
         <Text className="font-clashmedium text-[26px] tracking-widest text-gray-900">
-          {showBalance ? '$ 232.333' : '$ *****'}
+          {loadingBalance ? (
+            <View className="h-7 w-24 animate-pulse rounded bg-gray-300" />
+          ) : showBalance ? (
+            `$ ${Number(usdc?.formatted ?? 0).toFixed(2)}`
+          ) : (
+            '$ *****'
+          )}
         </Text>
         <Pressable onPress={() => setShowBalance(!showBalance)} className="p-2">
           <Ionicons
@@ -75,8 +88,6 @@ const BalanceCard = (props: Props) => {
           </Pressable>
         ))}
       </View>
-
-     
     </View>
   );
 };
