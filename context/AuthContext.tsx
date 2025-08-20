@@ -45,16 +45,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async () => {
     try {
-      setLoading(true);
+      router.replace('/auth');
+      // setLoading(true);
       await AsyncStorage.removeItem('authToken');
       await AsyncStorage.removeItem('user');
       setUser(null);
-      showToast({
-        type: 'info',
-        message: 'Logged Out',
-        description: 'You have been logged out successfully.',
-      });
-      router.replace('/auth');
+      // showToast({
+      //   type: 'info',
+      //   message: 'Logged Out',
+      //   description: 'You have been logged out successfully.',
+      // });
+
+      // router.replace('/auth');
       
     } catch (error) {
       showToast({

@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Image, ScrollView } from 'react-native';
+import { View, Text, Pressable, Image, ScrollView, ActivityIndicator } from 'react-native';
 import React, { useCallback, useRef } from 'react';
 
 import { Container } from '~/components/reusbales/Container';
@@ -11,7 +11,7 @@ import { useAuth } from '~/context/AuthContext';
 import { images } from '~/constants/images';
 import Recommended from '~/components/home/Recommended';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import { useGetUserBalance } from '~/hooks/use-transactions';
+import { useGetTransactionHistory, useGetUserBalance } from '~/hooks/use-transactions';
 import ReceiveSheet from '~/components/bottom-sheets/RecieveSheet';
 
 const Home = () => {
@@ -40,7 +40,11 @@ const Home = () => {
   ];
 
   const { data, isLoading } = useGetUserBalance();
+  const { data: trxhistory, isLoading: isLoadingTrx } = useGetTransactionHistory();
 
+  // console.log(trxhistory)
+
+  const transactions = trxhistory?.data?.transactions || [];
   const balances = data?.data?.balances?.balances;
 
   console.log('hmm', balances);
@@ -99,7 +103,12 @@ const Home = () => {
           ))}
         </View> */}
           {/* <SwiperAds /> */}
-          <TransactionHistory />
+
+          {isLoadingTrx ? (
+            <ActivityIndicator />
+          ) : (
+            <TransactionHistory transactions={transactions} />
+          )}
         </View>
       </Container>
 
