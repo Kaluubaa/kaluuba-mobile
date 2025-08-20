@@ -6,6 +6,10 @@ export const getUserBalance = async () => {
   return apiGet<any>(endpoints.transactions.getBalance);
 };
 
+export const getTransactionHistory = async () => {
+  return apiGet<any>(endpoints.transactions.getTransactionHistory);
+};
+
 export const validateTransactionRecipient = async (recipientIdentifier: string) => {
   return apiPost<any>(`${endpoints.transactions.validateRecipient}`, { recipientIdentifier });
 };

@@ -12,7 +12,8 @@ const endpoints = {
         getBalance: '/transactions/balances',
         getTransactionHistory: '/transactions/history',
         validateRecipient: '/transactions/validate-recipient',
-        send: '/transactions/send'
+        send: '/transactions/send',
+        history: '/transactions/history'
     }
 };
 

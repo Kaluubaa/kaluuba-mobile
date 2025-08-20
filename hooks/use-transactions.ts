@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
+  getTransactionHistory,
   getUserBalance,
   sendToken,
   validateTransactionRecipient,
@@ -24,5 +25,12 @@ export const useSendToken = () => {
   return useMutation({
     mutationKey: ['sendToken'],
     mutationFn: (data: SendData) => sendToken(data),
+  });
+};
+
+export const useGetTransactionHistory = () => {
+  return useQuery({
+    queryKey: ['transactionHistory'],
+    queryFn: getTransactionHistory,
   });
 };
