@@ -14,6 +14,14 @@ const endpoints = {
         validateRecipient: '/transactions/validate-recipient',
         send: '/transactions/send',
         history: '/transactions/history'
+    },
+
+    invoicing: {
+        createClient: '/clients/create',
+        getAllClients: '/clients',
+        create: '/invoices/create',
+        
+        
     }
 };
 

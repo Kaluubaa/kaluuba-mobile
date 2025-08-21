@@ -47,7 +47,7 @@ const handleShare = async () => {
     <BottomSheetContainer
       title="Deposit USDC"
       onClose={onClose}
-      subtitle="To receive from another Kaluuba account, ask the sender to scan your code below.">
+      subtitle={`To receive from another Kaluuba account, ask the sender to scan your code below, or use your kaluuba tag @${user?.username}`}>
       <View className="mx-20 mt-6 flex h-[300px] w-full items-center justify-center rounded-lg bg-gray-100">
         <QRCode value={user?.walletAddress || ''} size={200} />
       </View>

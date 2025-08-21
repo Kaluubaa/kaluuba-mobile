@@ -1,12 +1,14 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { 
-  createInvoice, 
-  getUserInvoices, 
-  deleteInvoice, 
-  publishInvoice, 
-  updateInvoice 
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { createClient, getAllClients } from '~/services/client.service';
+import {
+  createInvoice,
+  getUserInvoices,
+  deleteInvoice,
+  publishInvoice,
+  updateInvoice,
 } from '~/services/invoice.service';
 import { Invoice } from '~/types/invoice.t';
+import { CreateClientDto } from '~/types/Invoicing.types';
 
 export function useCreateInvoice() {
   return useMutation({
@@ -35,7 +37,23 @@ export function usePublishInvoice() {
 
 export function useUpdateInvoice() {
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<Invoice> }) => 
-      updateInvoice(id, data),
+    mutationFn: ({ id, data }: { id: string; data: Partial<Invoice> }) => updateInvoice(id, data),
   });
-} 
+}
+
+export function useCreateClient() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: CreateClientDto) => createClient(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['client'] });
+    },
+  });
+}
+
+export const useGetClient = () => {
+  return useQuery({
+    queryKey: ['client'],
+    queryFn: getAllClients,
+  });
+};

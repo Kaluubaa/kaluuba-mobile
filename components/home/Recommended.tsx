@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 const Recommended = () => {
   return (
     <View className="mt-3 w-full">
-      <Text className="font-clashmedium tracking-wider text-gray-600">Recommended</Text>
+      <Text className="font-clashmedium tracking-wider text-gray-800">Recommended</Text>
 
       <View className="mt-4 flex-row items-center justify-between">
         <TouchableOpacity
