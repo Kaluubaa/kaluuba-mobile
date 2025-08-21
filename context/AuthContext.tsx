@@ -4,7 +4,7 @@ import { useToast } from './ToastContext';
 import { User } from '~/types/user';
 import { useProfile } from '~/hooks/use-auth';
 import { getUser } from '~/services/auth.service';
-
+import { router } from 'expo-router';
 
 interface AuthContextProps {
   user: User | null;
@@ -45,15 +45,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async () => {
     try {
-      setLoading(true);
+      router.replace('/auth');
+      // setLoading(true);
       await AsyncStorage.removeItem('authToken');
       await AsyncStorage.removeItem('user');
       setUser(null);
-      showToast({
-        type: 'info',
-        message: 'Logged Out',
-        description: 'You have been logged out successfully.',
-      });
+      // showToast({
+      //   type: 'info',
+      //   message: 'Logged Out',
+      //   description: 'You have been logged out successfully.',
+      // });
+
+      // router.replace('/auth');
+      
     } catch (error) {
       showToast({
         type: 'error',
@@ -65,20 +69,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  
   useEffect(() => {
     const initializeAuth = async () => {
       try {
         setLoading(true);
-        const [token] = await Promise.all([
-          AsyncStorage.getItem('authToken'),
-        ]);
+        const [token] = await Promise.all([AsyncStorage.getItem('authToken')]);
 
-        
         if (token) {
           const user = await getUser();
           setUser(user?.data?.user);
-          console.log('userrr', user)
+          console.log('userrr', user);
         }
       } catch (error) {
         console.error('Failed to initialize auth:', error);

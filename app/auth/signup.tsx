@@ -13,6 +13,7 @@ import countries from '~/constants/countries.json';
 import CountryModal from '~/components/auth/CountryModal';
 import { useRegister } from '~/hooks/use-auth';
 import { useToast } from '~/context/ToastContext';
+import { useAuth } from '~/context/AuthContext';
 
 const signupSchema = z.object({
   // firstName: z.string().min(2, 'First name must be at least 2 characters'),
@@ -66,6 +67,8 @@ const Signup = () => {
     country.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const { login, setUser } = useAuth();
+
   const onSubmit = (data: SignupFormData) => {
     console.log('Form data:', data);
     mutate(
@@ -76,7 +79,9 @@ const Signup = () => {
         country: data.country?.name || null,
       },
       {
-        onSuccess: (res) => {
+        onSuccess: (res: any) => {
+          console.log('Signup successful:', res);
+          setUser(res?.data?.user);
           router.push({ pathname: '/auth/verifyOtp', params: { email: data.email } });
         },
         onError: (err: any) => {

@@ -86,7 +86,7 @@ const AuthIndex = () => {
             size="lg"
             className="h-[55px] gap-10 rounded-full"
             textClassName="flex-row items-center text-base font-semibold"
-            onPress={() => router.push('/auth/authoption')}>
+            onPress={() => router.push('/auth/login')}>
             Get Started
             {/* <Ionicons name="arrow-forward" size={20} color="#ffffff" className="ml-2" /> */}
           </Button>

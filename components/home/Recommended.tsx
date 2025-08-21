@@ -52,7 +52,29 @@ const Recommended = () => {
             className="absolute -bottom-5 -right-5 h-[70px] w-[70px]"
           />
         </TouchableOpacity>
-        <View className="h-[100px] w-[31%] rounded-xl " />
+        <TouchableOpacity className="group h-[100px] w-[31%] overflow-hidden rounded-xl bg-white px-2 py-4">
+          <View className=" flex-row items-center justify-between ">
+            <Text className="font-jarkatasemibold text-sm text-gray-800 group-hover:text-base">
+              {' '}
+              Giftcards
+            </Text>
+            <Ionicons
+              name="chevron-forward"
+              size={14}
+              color="#6B7280"
+              className="absolute right-2 top-0"
+            />
+          </View>
+
+          <Image
+            source={{
+              uri: 'https://cdn3d.iconscout.com/3d/premium/thumb/gift-card-8567218-6757143.png',
+            }}
+            style={{ width: 70, height: 70 }}
+            resizeMode="contain"
+            className="absolute -bottom-4 -right-3 h-[70px] w-[70px]"
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );
