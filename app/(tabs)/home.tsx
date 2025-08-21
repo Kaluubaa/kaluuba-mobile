@@ -56,41 +56,42 @@ const Home = () => {
   }, []);
 
   return (
-    <View style={{ flex: 1 }}>
-      <Container className="flex-1 px-2 py-6 ">
-        <View className="flex-1 gap-6">
-          <View className="mb-4 flex-row justify-between">
-            <View className="flex-row items-center gap-2">
-              <View className="h-12 w-12 overflow-hidden rounded-full  border border-primary-500 bg-primary-300">
-                <Image source={images.user} className="h-full w-full" />
+    <View className="flex-1">
+      <Container className="flex-1  px-2 pt-6">
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View className="flex-1  gap-6">
+            <View className="mb-4 flex-row justify-between">
+              <View className="flex-row items-center gap-2">
+                <View className="h-12 w-12 overflow-hidden rounded-full  border border-primary-500 bg-primary-300">
+                  <Image source={images.user} className="h-full w-full" />
+                </View>
+                <View className="gap-0.5">
+                  <Text className="font-jarkatasemibold text-primary-600">@{user?.username}</Text>
+                  <Text className="font-jarkatamedium text-xs text-gray-600">
+                    Money is energy, direct it with purpose
+                  </Text>
+                </View>
               </View>
-              <View className="gap-0.5">
-                <Text className="font-jarkatasemibold text-primary-600">@{user?.username}</Text>
-                <Text className="font-jarkatamedium text-xs text-gray-600">
-                  Money is energy, direct it with purpose
-                </Text>
+
+              <View className="relative flex size-10 items-center justify-center rounded-full bg-primary-600">
+                <Ionicons name="notifications-outline" size={20} color={'#ffffff'} />
+                <View className="absolute right-0 top-1 size-3 rounded-full bg-red-500" />
               </View>
             </View>
+            <BalanceCard
+              openRecieveSheet={bottomSheetRef.current?.expand}
+              balances={balances}
+              loadingBalance={isLoading}
+            />
 
-            <View className="relative flex size-10 items-center justify-center rounded-full bg-primary-600">
-              <Ionicons name="notifications-outline" size={20} color={'#ffffff'} />
-              <View className="absolute right-0 top-1 size-3 rounded-full bg-red-500" />
-            </View>
-          </View>
-          <BalanceCard
-            openRecieveSheet={bottomSheetRef.current?.expand}
-            balances={balances}
-            loadingBalance={isLoading}
-          />
+            <Recommended />
 
-          <Recommended />
-
-          {/* <Pressable
+            {/* <Pressable
           onPress={() => bottomSheetRef.current?.expand()}
           className="mb-4 items-center justify-center rounded bg-primary-600 py-2">
           <Text className="font-jarkatamedium text-white">Open Bottom Sheet</Text>
         </Pressable> */}
-          {/* <View className="flex-row justify-between px-3">
+            {/* <View className="flex-row justify-between px-3">
           {actions.map((action, index) => (
             <Pressable onPress={action.onPress} key={index}>
               <View className="h-[48px] w-[48px] items-center justify-center rounded-full bg-white">
@@ -102,14 +103,17 @@ const Home = () => {
             </Pressable>
           ))}
         </View> */}
-          {/* <SwiperAds /> */}
+            {/* <SwiperAds /> */}
 
-          {isLoadingTrx ? (
-            <ActivityIndicator />
-          ) : (
-            <TransactionHistory transactions={transactions} />
-          )}
-        </View>
+            <View className="h-full flex-1 ">
+              {isLoadingTrx ? (
+                <ActivityIndicator />
+              ) : (
+                <TransactionHistory transactions={transactions?.slice(0, 3)} />
+              )}
+            </View>
+          </View>
+        </ScrollView>
       </Container>
 
       <BottomSheet

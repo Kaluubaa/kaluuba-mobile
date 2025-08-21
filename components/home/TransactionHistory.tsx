@@ -1,18 +1,33 @@
 import React from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { ITransaction } from '~/types/transactions.types';
+import { formatTransactionDate } from '~/utils/format-date';
+import TransactionItem from '../transactions/TransactionItem';
 
 type Prop = {
   transactions: ITransaction[];
-}
+};
 const TransactionHistory = ({ transactions }: Prop) => {
-  console.log(transactions)
+  // console.log(transactions);
+
+  const getStatusStyles = (status: string) => {
+    switch (status) {
+      case 'confirmed':
+        return 'bg-primary-100 text-primary-600';
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-600';
+      case 'failed':
+        return 'bg-red-100 text-red-600';
+      default:
+        return 'bg-gray-100 text-gray-600';
+    }
+  };
   return (
-    <View className="mt-8 px-2 flex-1">
+    <View className="mt-8 flex-1 px-2">
       <View className="mb-3 flex-row items-center justify-between">
-        <Text className="font-clashmedium text-gray-600 tracking-wider">Recent Transactions</Text>
+        <Text className="font-clashmedium tracking-wider text-gray-800">Recent Transactions</Text>
         <TouchableOpacity onPress={() => router.push('/history')}>
           <View className="flex-row items-center gap-2">
             <Text className="font-jarkatamedium text-sm text-primary-600">See all</Text>
@@ -23,18 +38,7 @@ const TransactionHistory = ({ transactions }: Prop) => {
       <FlatList
         data={transactions}
         keyExtractor={(item) => item.transactionId}
-        renderItem={({ item }) => (
-          <View className="flex-row items-center border-b border-gray-100 py-3">
-            <View className="mr-3 h-10 w-10 items-center justify-center rounded-full bg-gray-100">
-              <Ionicons name={`arrow-up`} size={18} className='' />
-            </View>
-            <View className="flex-1">
-              <Text className="font-jarkatamedium text-sm text-gray-900">{item.type}</Text>
-              <Text className="text-xs text-gray-400">{item.date}</Text>
-            </View>
-            <Text className={`font-jarkatamedium text-xs  ${item.color}`}>{item.amount}</Text>
-          </View>
-        )}
+        renderItem={({ item }) => <TransactionItem transaction={item} />}
         ListEmptyComponent={
           <View className="items-center py-16">
             <Text className="text-gray-400">No transactions yet.</Text>
