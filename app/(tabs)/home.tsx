@@ -1,46 +1,27 @@
-import { View, Text, Pressable, Image, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, Image, ScrollView, ActivityIndicator, RefreshControl } from 'react-native';
 import React, { useCallback, useRef } from 'react';
 
 import { Container } from '~/components/reusbales/Container';
 import BalanceCard from '~/components/home/BalanceCard';
 import { Ionicons } from '@expo/vector-icons';
 import TransactionHistory from '~/components/home/TransactionHistory';
-import SwiperAds from '~/components/home/SwipperAds';
-import { router } from 'expo-router';
 import { useAuth } from '~/context/AuthContext';
 import { images } from '~/constants/images';
 import Recommended from '~/components/home/Recommended';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet from '@gorhom/bottom-sheet';
 import { useGetTransactionHistory, useGetUserBalance } from '~/hooks/use-transactions';
 import ReceiveSheet from '~/components/bottom-sheets/RecieveSheet';
+import { useRefresh } from '~/hooks/use-refresh';
 
 const Home = () => {
   const { user } = useAuth();
-  const actions = [
-    {
-      title: 'Invoice',
-      icon: 'document-attach-outline',
-      onPress: () => router.push('/invoices/create'),
-    },
-    {
-      title: 'Scan',
-      icon: 'scan-outline',
-      onPress: () => console.log('Scan pressed'),
-    },
-    {
-      title: 'Recieve',
-      icon: 'arrow-down-outline',
-      onPress: () => console.log('Add pressed'),
-    },
-    {
-      title: 'Withdraw',
-      icon: 'arrow-up-outline',
-      onPress: () => console.log('Withdraw pressed'),
-    },
-  ];
+  
 
-  const { data, isLoading } = useGetUserBalance();
-  const { data: trxhistory, isLoading: isLoadingTrx } = useGetTransactionHistory();
+  const { data, isLoading, refetch: refetchBalance } = useGetUserBalance();
+  const { data: trxhistory, isLoading: isLoadingTrx, refetch: refetchTransactions } = useGetTransactionHistory();
+
+  // Use the custom refresh hook
+  const { refreshing, onRefresh } = useRefresh([refetchBalance, refetchTransactions]);
 
   // console.log(trxhistory)
 
@@ -55,10 +36,22 @@ const Home = () => {
     console.log('handleSheetChanges', index);
   }, []);
 
+
   return (
     <View className="flex-1">
-      <Container className="flex-1  px-2 pt-6">
-        <ScrollView showsVerticalScrollIndicator={false}>
+      <Container className="flex-1 bg-[#f5f5f5]  px-2 pt-6">
+        <ScrollView 
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor="#6366f1" // primary-500 color
+              colors={['#6366f1']} // Android
+              title="Pull to refresh"
+              titleColor="#6b7280"
+            />
+          }>
           <View className="flex-1  gap-6">
             <View className="mb-4 flex-row justify-between">
               <View className="flex-row items-center gap-2">

@@ -106,7 +106,7 @@ const Success = () => {
           className="mt-auto w-full rounded-full bg-teal-800 px-4 py-4 "
           textClassName="font-sofia-regular text-base text-white"
           onPress={() => router.replace('/(tabs)/home')}>
-          Secure your account
+          continue
         </Button>
       </View>
     </Container>

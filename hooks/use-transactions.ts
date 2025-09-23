@@ -9,8 +9,10 @@ import { SendData } from '~/types/transactions.types';
 
 export const useGetUserBalance = () => {
   return useQuery({
-    queryKey: ['invoices'],
+    queryKey: ['userBalance'],
     queryFn: getUserBalance,
+    staleTime: 30000, // Consider data stale after 30 seconds
+    refetchOnWindowFocus: true, // Refetch when app comes to foreground
   });
 };
 
@@ -32,5 +34,7 @@ export const useGetTransactionHistory = () => {
   return useQuery({
     queryKey: ['transactionHistory'],
     queryFn: getTransactionHistory,
+    staleTime: 30000, // Consider data stale after 30 seconds
+    refetchOnWindowFocus: true, // Refetch when app comes to foreground
   });
 };
