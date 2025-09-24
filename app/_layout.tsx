@@ -7,6 +7,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastProvider } from '~/context/ToastContext';
 import { AuthProvider } from '~/context/AuthContext';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SheetProvider } from 'react-native-actions-sheet';
+import SendTypeSheet from '~/components/sheets/SendTypeShee';
 
 const queryClient = new QueryClient();
 
@@ -20,37 +22,47 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView className="flex-1">
-        <ToastProvider>
-          <AuthProvider>
-            <Stack
-              screenOptions={{
-                headerShown: false,
-                headerTitleStyle: {
-                  fontFamily: 'jarkataregular',
-                },
-              }}>
-              <Stack.Screen
-                name="index"
-                options={{
+        <SheetProvider context="global">
+          <SendTypeSheet />
+          <ToastProvider>
+            <AuthProvider>
+              <Stack
+                screenOptions={{
                   headerShown: false,
-                }}
-              />
-              <Stack.Screen
-                name="scan"
-                options={{
-                  headerShown: false,
-                }}
-              />
+                  headerTitleStyle: {
+                    fontFamily: 'jarkataregular',
+                  },
+                }}>
+                <Stack.Screen
+                  name="index"
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="scan"
+                  options={{
+                    headerShown: false,
+                  }}
+                />
 
-              <Stack.Screen
-                name="send"
-                options={{
-                  headerShown: false,
-                }}
-              />
-            </Stack>
-          </AuthProvider>
-        </ToastProvider>
+                <Stack.Screen
+                  name="send"
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+
+                <Stack.Screen
+                  name="recieve"
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+              </Stack>
+            </AuthProvider>
+          </ToastProvider>
+        </SheetProvider>
       </GestureHandlerRootView>
     </QueryClientProvider>
   );

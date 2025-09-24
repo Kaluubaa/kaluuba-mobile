@@ -1,5 +1,5 @@
-import React from 'react';
-import { Pressable, Text, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { Pressable, Text, TouchableOpacity, View, ScrollView, RefreshControl } from 'react-native';
 import { router } from '~/.expo/types/router';
 import Clients from '~/components/invoice/Clients';
 import { InvoiceList } from '~/components/invoice/InvoiceList';
@@ -7,10 +7,11 @@ import { Button } from '~/components/reusbales/Button';
 import { Container } from '~/components/reusbales/Container';
 import Header from '~/components/reusbales/Header';
 import { useGetClient, useGetUserInvoices } from '~/hooks/use-invoice';
+import { useRefresh } from '~/hooks/use-refresh';
 
 const InvoicesPage = () => {
-  const { data } = useGetUserInvoices();
-  const { data: clients } = useGetClient();
+  const { data, refetch: refetchInvoices } = useGetUserInvoices();
+  const { data: clients, refetch: refetchClients } = useGetClient();
 
   const tabs = ['invoices', 'clients'];
 
@@ -19,6 +20,9 @@ const InvoicesPage = () => {
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
+
+  // Use the custom refresh hook
+  const { refreshing, onRefresh } = useRefresh([refetchInvoices, refetchClients]);
 
   const invoices = data?.data.invoices;
   const allClients = clients?.data?.clients;
@@ -54,25 +58,38 @@ const InvoicesPage = () => {
         </View>
       </View>
 
-      {activeTab === 'invoices' && (
-        <View className="flex-1 py-4">
-          <InvoiceList invoices={invoices} />
-        </View>
-      )}
-      {activeTab === 'clients' && (
-        <View className="flex-1 py-4">
-          <Clients clients={allClients} />
-          {/* <Text className="text-gray-500">Clients will be implemented soon.</Text> */}
-        </View>
-      )}
+      <ScrollView 
+        className="flex-1"
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor="#6366f1"
+            colors={['#6366f1']}
+            title="Pull to refresh"
+            titleColor="#6b7280"
+          />
+        }>
+        {activeTab === 'invoices' && (
+          <View className="flex-1 py-4">
+            <InvoiceList invoices={invoices} />
+          </View>
+        )}
+        {activeTab === 'clients' && (
+          <View className="flex-1 py-4">
+            <Clients clients={allClients} />
+            {/* <Text className="text-gray-500">Clients will be implemented soon.</Text> */}
+          </View>
+        )}
 
-      {/* Uncomment this when the customers tab is implemented */}
-      {/* {activeTab === 'customers' && (
-        <View className="flex-1">
-          <CustomerList customers={customers} />
-        </View>
-      )} */}
-      {/* <InvoiceList invoices={invoices} />; */}
+        {/* Uncomment this when the customers tab is implemented */}
+        {/* {activeTab === 'customers' && (
+          <View className="flex-1">
+            <CustomerList customers={customers} />
+          </View>
+        )} */}
+        {/* <InvoiceList invoices={invoices} />; */}
+      </ScrollView>
     </Container>
   );
 };

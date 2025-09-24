@@ -3,7 +3,7 @@ import { QueryClient } from '@tanstack/react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const api = axios.create({
-  baseURL: 'http://localhost:3030/api/v1',
+  baseURL: 'http://192.168.52.231:3030/api/v1',
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',

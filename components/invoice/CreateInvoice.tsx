@@ -53,28 +53,7 @@ export const CreateInvoice = () => {
   });
 
   const onSubmit = (data: CreateInvoiceFormData) => {
-    createInvoice(
-      {
-        ...data,
-      },
-      {
-        onSuccess: () => {
-          showToast({
-            type: 'success',
-            message: 'Invoice Created',
-            description: 'Your invoice has been created successfully.',
-          });
-          router.push('/(tabs)/invoices');
-        },
-        onError: (error) => {
-          showToast({
-            type: 'error',
-            message: 'Creation Failed',
-            description: error.message,
-          });
-        },
-      }
-    );
+   
   };
 
   return (
@@ -230,10 +209,12 @@ export const CreateInvoice = () => {
             <Text className="ml-2 font-jarkatamedium text-primary-500">Add Item</Text>
           </Pressable>
 
-          <View className="mb-6 flex-row items-center justify-between border-y border-gray-200 py-4 pt-4">
+          <View className="flex-row items-center justify-between border-y mb-6 py-4 border-gray-200 pt-4">
             <Text className="font-jarkatasemibold text-gray-800">Total</Text>
 
             <Text className="font-jarkatasemibold text-gray-600">$ 00.00</Text>
+
+
           </View>
           <Pressable
             onPress={handleSubmit(onSubmit)}
