@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   getTransactionHistory,
   getUserBalance,
@@ -24,9 +24,16 @@ export const useValidateRecipient = () => {
 };
 
 export const useSendToken = () => {
+  const queryClient = useQueryClient();
+  
   return useMutation({
     mutationKey: ['sendToken'],
     mutationFn: (data: SendData) => sendToken(data),
+    onSuccess: () => {
+      // Invalidate balance and transaction history queries after successful send
+      queryClient.invalidateQueries({ queryKey: ['userBalance'] });
+      queryClient.invalidateQueries({ queryKey: ['transactionHistory'] });
+    },
   });
 };
 

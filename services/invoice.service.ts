@@ -2,7 +2,7 @@ import { Invoice } from "~/types/invoice.t";
 import { apiPost, apiGet, apiDelete, apiPatch } from "./api";
 
 export const createInvoice = async (data: Invoice) => {
-  return apiPost("/invoices", data);
+  return apiPost("/invoices/create", data);
 };
 
 export const getUserInvoices = async () => {

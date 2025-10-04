@@ -6,12 +6,12 @@ import { router } from 'expo-router';
 const Recommended = () => {
   return (
     <View className="mt-3 w-full">
-      <Text className="font-clashmedium tracking-wider text-gray-800">Recommended</Text>
+      <Text className="font-jarkatabold  tracking-wider text-gray-800">Recommended</Text>
 
       <View className="mt-4 flex-row items-center justify-between">
         <TouchableOpacity
           onPress={() => router.push('/(tabs)/invoices')}
-          className="group h-[100px] w-[31%] overflow-hidden rounded-xl bg-white px-2 py-4">
+          className="group border border-gray-100 h-[100px] w-[31%] overflow-hidden rounded-xl bg-white px-2 py-4">
           <View className=" flex-row items-center justify-between ">
             <Text className="font-jarkatasemibold text-sm text-gray-800 group-hover:text-base">
               {' '}
@@ -29,11 +29,11 @@ const Recommended = () => {
             className="absolute -bottom-6 -right-6 h-[70px] w-[70px]"
           />
         </TouchableOpacity>
-        <TouchableOpacity className="group h-[100px] w-[31%] overflow-hidden rounded-xl bg-white px-2 py-4">
+        <TouchableOpacity className="group border border-gray-100 h-[100px] w-[31%] overflow-hidden rounded-xl bg-white px-2 py-4">
           <View className=" flex-row items-center justify-between ">
             <Text className="font-jarkatasemibold text-sm text-gray-800 group-hover:text-base">
               {' '}
-              Cards & Payments
+              Cards
             </Text>
             <Ionicons
               name="chevron-forward"
@@ -52,7 +52,7 @@ const Recommended = () => {
             className="absolute -bottom-5 -right-5 h-[70px] w-[70px]"
           />
         </TouchableOpacity>
-        <TouchableOpacity className="group h-[100px] w-[31%] overflow-hidden rounded-xl bg-white px-2 py-4">
+        <TouchableOpacity className="group border border-gray-100 h-[100px] w-[31%] overflow-hidden rounded-xl bg-white px-2 py-4">
           <View className=" flex-row items-center justify-between ">
             <Text className="font-jarkatasemibold text-sm text-gray-800 group-hover:text-base">
               {' '}

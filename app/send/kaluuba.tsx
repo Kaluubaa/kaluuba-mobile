@@ -1,266 +1,235 @@
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Animated, Alert } from 'react-native';
-import React, { useEffect, useState, useRef } from 'react';
-import { Container } from '~/components/reusbales/Container';
-import Header from '~/components/reusbales/Header';
+import { View, Text, TextInput, TouchableOpacity, SafeAreaView, StatusBar, ActivityIndicator, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { Button } from '~/components/reusbales/Button';
 import { useValidateRecipient } from '~/hooks/use-transactions';
-import * as Clipboard from 'expo-clipboard';
 
 const Kaluuba = () => {
-  const [kaluubaName, setKaluubaName] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showTagInput, setShowTagInput] = useState(false);
+  const [kaluubaTag, setKaluubaTag] = useState('');
   const [valid, setValid] = useState(false);
   const [smartAccountAddress, setSmartAccountAddress] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [searchError, setSearchError] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
   
-  // Animation refs
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0.95)).current;
-  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const { mutate: validateRecipient } = useValidateRecipient();
 
-  const handleScanPress = () => {
-    router.push('/scan'); // Navigate to your scan page
+  const handleNewRecipient = () => {
+    setShowTagInput(true);
   };
 
   const handleContinue = () => {
-    router.push({ pathname: '/send/select-coin', params: { kaluubaName, from: 'kaluuba' } });
-  };
-
-  const handleCopyAddress = async () => {
-    try {
-      await Clipboard.setStringAsync(smartAccountAddress);
-      Alert.alert('Copied!', 'Address copied to clipboard');
-    } catch {
-      Alert.alert('Error', 'Failed to copy address');
+    if (valid && kaluubaTag.trim()) {
+      router.push({ pathname: '/send/amount', params: { kaluubaName: kaluubaTag, from: 'kaluuba', coin: 'USDC' } });
     }
   };
 
-  const { mutate: validateRecipient } = useValidateRecipient();
-
-  // Animation effects
+  // Validate when typing kaluuba tag (debounced)
   useEffect(() => {
-    if (valid) {
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.spring(scaleAnim, {
-          toValue: 1,
-          tension: 100,
-          friction: 8,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    } else {
-      fadeAnim.setValue(0);
-      scaleAnim.setValue(0.95);
-    }
-  }, [valid, fadeAnim, scaleAnim]);
+    if (!showTagInput) return;
+    if (debounceRef.current) clearTimeout(debounceRef.current);
 
-  // Pulse animation for loading
-  useEffect(() => {
-    if (isSearching) {
-      const pulse = Animated.loop(
-        Animated.sequence([
-          Animated.timing(pulseAnim, {
-            toValue: 1.1,
-            duration: 800,
-            useNativeDriver: true,
-          }),
-          Animated.timing(pulseAnim, {
-            toValue: 1,
-            duration: 800,
-            useNativeDriver: true,
-          }),
-        ])
-      );
-      pulse.start();
-      return () => pulse.stop();
-    }
-  }, [isSearching, pulseAnim]);
-
-  useEffect(() => {
-    if (!kaluubaName.trim()) {
+    const tag = kaluubaTag.trim();
+    if (!tag) {
       setValid(false);
       setSmartAccountAddress('');
-      setSearchError('');
-      setHasSearched(false);
       setIsSearching(false);
+      setHasSearched(false);
+      setSearchError('');
       return;
     }
 
     setIsSearching(true);
-    setSearchError('');
     setHasSearched(true);
+    setSearchError('');
 
-    const handler = setTimeout(() => {
-      validateRecipient(kaluubaName, {
+    debounceRef.current = setTimeout(() => {
+      validateRecipient(tag, {
         onSuccess: (res: any) => {
           const isValid = res?.data?.valid;
-          setValid(isValid);
+          setValid(!!isValid);
           setSmartAccountAddress(isValid ? res?.data?.recipientInfo?.smartAccountAddress : '');
-          setSearchError(isValid ? '' : 'Kaluuba name not found');
+          setSearchError(isValid ? '' : 'Kaluuba tag not found');
           setIsSearching(false);
         },
-        onError: (err) => {
+        onError: () => {
           setValid(false);
-          setSearchError('Unable to verify Kaluuba name');
+          setSmartAccountAddress('');
+          setSearchError('Unable to verify Kaluuba tag');
           setIsSearching(false);
-          console.log(err);
         },
       });
-    }, 800); // Increased debounce time for better UX
+    }, 600);
 
-    return () => clearTimeout(handler);
-  }, [kaluubaName, validateRecipient]);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [kaluubaTag, showTagInput, validateRecipient]);
 
-  return (
-    <Container className="flex-1 bg-gray-50 px-2">
-      <Header title="Send to kaluuba Wallet" />
+  if (showTagInput) {
+    return (
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView className="flex-1 bg-white">
+          <StatusBar barStyle="dark-content" backgroundColor="white" />
+          
+          <View className="flex-1 px-6 pt-4">
+          <View className="mb-8 flex-col gap-3">
+            <TouchableOpacity 
+              onPress={() => setShowTagInput(false)}
+              className="mr-4"
+            >
+              <Ionicons name="arrow-back" size={22} color="#000" />
+            </TouchableOpacity>
+            <Text className="text-[22px] font-semibold text-black">
+              Send to a Kaluuba Tag
+            </Text>
+          </View>
 
-      <View className="flex-1">
-        <View className="mt-8">
-          <Text className="mb-3 font-jarkatamedium text-base text-gray-700">
-            Enter Kaluuba username
+          <View className="mb-8">
+            <Text className="text-base text-gray-600 mb-6">
+              Enter Kaluuba user&apos;s tag
+            </Text>
+            
+            <View className="mb-2">
+              <Text className="text-sm font-medium text-black mb-2">
+                Kaluuba Tag
           </Text>
-          <View className={`relative flex-row items-center rounded-xl border px-3 transition-colors ${
+              <View className={`flex-row items-center rounded-xl border px-4 py-4 ${
             valid ? 'border-green-400 bg-green-50' : 
             searchError ? 'border-red-400 bg-red-50' : 
-            isSearching ? 'border-primary-400 bg-primary-50' : 
+                isSearching ? 'border-[#68C8CA] bg-[#F0FBFB]' :
             'border-gray-200 bg-white'
           }`}>
+                <Text className="text-gray-400 text-lg mr-2">@</Text>
             <TextInput
-              className="flex-1 py-4 font-jarkatamedium text-base text-gray-800"
-              placeholder="e.g., john_doe"
-              value={kaluubaName}
-              onChangeText={setKaluubaName}
+                  className="flex-1 text-base text-black"
+                  placeholder="Enter Kaluuba Tag"
+                  placeholderTextColor="#9CA3AF"
+                  value={kaluubaTag}
+                  onChangeText={setKaluubaTag}
               autoCapitalize="none"
               autoCorrect={false}
               autoComplete="off"
             />
-            <View className="ml-2 flex-row items-center">
+                <View className="ml-2">
               {isSearching ? (
-                <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
-                  <ActivityIndicator size="small" color="#6366f1" />
-                </Animated.View>
+                    <ActivityIndicator size="small" color="#167D7F" />
               ) : valid ? (
-                <Ionicons name="checkmark-circle" size={24} color="#10b981" />
+                    <Ionicons name="checkmark-circle" size={22} color="#10b981" />
               ) : hasSearched && searchError ? (
-                <Ionicons name="close-circle" size={24} color="#ef4444" />
-              ) : (
-                <TouchableOpacity onPress={handleScanPress} className="p-1">
-                  <Ionicons name="qr-code-outline" size={24} color="#167D7F" />
-                </TouchableOpacity>
+                    <Ionicons name="close-circle" size={22} color="#ef4444" />
+                  ) : null}
+                </View>
+              </View>
+
+              {isSearching && (
+                <Text className="mt-2 text-sm text-[#167D7F]">Validating tag…</Text>
               )}
+              {hasSearched && searchError ? (
+                <Text className="mt-2 text-sm text-red-600">{searchError}</Text>
+              ) : null}
             </View>
+
+            {valid && smartAccountAddress ? (
+              <View className="mt-4">
+                <Text className="mb-2 text-xs text-gray-600">Resolved address</Text>
+                <View className="rounded-xl border border-gray-200 bg-gray-50 opacity-60 px-4 py-3">
+                  <Text className="text-sm text-gray-800" numberOfLines={1}>
+                    {smartAccountAddress}
+                  </Text>
+                </View>
+              </View>
+            ) : null}
           </View>
           
-          {/* Status messages */}
-          {isSearching && (
-            <View className="mt-3 flex-row items-center">
-              <ActivityIndicator size="small" color="#6366f1" />
-              <Text className="ml-2 font-jarkataregular text-sm text-primary-600">
-                Searching for Kaluuba user...
-              </Text>
+          <View className="mt-auto mb-6">
+            <TouchableOpacity
+              onPress={handleContinue}
+              className={`w-full py-4 rounded-xl ${valid ? 'bg-[#167D7F]' : 'bg-gray-200'}`}
+              disabled={!valid}
+            >
+              <Text className={`text-center text-base font-medium ${valid ? 'text-white' : 'text-gray-400'}`}>Continue</Text>
+            </TouchableOpacity>
+          </View>
             </View>
-          )}
-          
-          {hasSearched && searchError && (
-            <View className="mt-3 flex-row items-center">
-              <Ionicons name="alert-circle" size={16} color="#ef4444" />
-              <Text className="ml-2 font-jarkataregular text-sm text-red-600">
-                {searchError}
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    );
+  }
+
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView className="flex-1 bg-white">
+        <StatusBar barStyle="dark-content" backgroundColor="white" />
+        
+        <View className="flex-1 px-6 pt-4">
+        <View className="mb-8 flex-row items-center">
+          <TouchableOpacity 
+            onPress={() => router.back()}
+            className="mr-4"
+          >
+            <Ionicons name="arrow-back" size={24} color="#000" />
+          </TouchableOpacity>
+          <Text className="text-2xl font-semibold text-black">
+            Send to a Kaluuba Tag
               </Text>
-            </View>
-          )}
-          
-          {valid && (
-            <View className="mt-3 flex-row items-center">
-              <Ionicons name="checkmark-circle" size={16} color="#10b981" />
-              <Text className="ml-2 font-jarkataregular text-sm text-green-600">
-                Kaluuba user found!
-              </Text>
-            </View>
-          )}
         </View>
 
-        {/* Account address section with animation */}
-        <Animated.View 
-          style={{ 
-            opacity: fadeAnim, 
-            transform: [{ scale: scaleAnim }] 
-          }}
-          className="mt-6">
-          {valid && (
-            <View>
-              <Text className="mb-2 px-1 font-jarkataregular text-sm text-gray-600">
-                Account address (Auto-generated)
+        <View className="mb-8">
+          <Text className="text-base text-gray-600 mb-6">
+            Send to a previous or a new recipient
               </Text>
-              <View className="relative flex-row items-center rounded-xl border border-green-200 bg-green-50 px-3">
-                <TextInput
-                  className="flex-1 py-4 font-jarkatamedium text-base text-gray-800"
-                  placeholder="Account address"
-                  value={smartAccountAddress}
-                  autoCapitalize="none"
-                  editable={false}
-                  selectTextOnFocus={true}
-                />
-                <TouchableOpacity onPress={handleCopyAddress} className="ml-2 p-1">
-                  <Ionicons name="copy-outline" size={20} color="#167D7F" />
-                </TouchableOpacity>
+          
+          <TouchableOpacity
+            onPress={handleNewRecipient}
+            className="w-full flex-row items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-4 mb-4"
+          >
+            <View className="flex-row items-center">
+              <View 
+                className="mr-3 h-10 w-10 items-center justify-center rounded-full"
+                style={{ backgroundColor: '#E6F7F8' }}
+              >
+                <Ionicons name="person-add-outline" size={20} color="#167D7F" />
               </View>
-              <Text className="mt-2 px-1 font-jarkataregular text-xs text-gray-500">
-                This address is automatically generated for the Kaluuba user
+              <Text className="text-base font-medium text-black">
+                Send to a new recipient
               </Text>
             </View>
-          )}
-        </Animated.View>
+            <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
+          </TouchableOpacity>
+
+          <View className="flex-row items-center rounded-xl border border-gray-200 bg-white px-4 py-4">
+            <Ionicons name="search" size={20} color="#9CA3AF" className="mr-3" />
+            <TextInput
+              className="flex-1 text-base text-black"
+              placeholder="Search by name or account details"
+              placeholderTextColor="#9CA3AF"
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+            />
+          </View>
       </View>
 
-      <View className="mb-6">
-        <Button
-          className={`h-[50px] w-full ${
-            valid && !isSearching 
-              ? 'bg-primary-600' 
-              : 'bg-gray-300'
-          }`}
-          onPress={handleContinue}
-          disabled={!valid || isSearching || kaluubaName.length === 0}>
-          <View className="flex-row items-center justify-center">
-            {isSearching ? (
-              <>
-                <ActivityIndicator size="small" color="white" />
-                <Text className="ml-2 font-jarkatamedium text-white">
-                  Searching...
-                </Text>
-              </>
-            ) : valid ? (
-              <>
-                <Ionicons name="arrow-forward" size={20} color="white" />
-                <Text className="ml-2 font-jarkatamedium text-white">
-                  Continue to Amount
-                </Text>
-              </>
-            ) : (
-              <Text className="font-jarkatamedium text-gray-500">
-                {kaluubaName.length === 0 ? 'Enter Kaluuba username' : 'Validating...'}
-              </Text>
-            )}
+        <View className="flex-1 items-center justify-center">
+          <View 
+            className="mb-4 h-20 w-20 items-center justify-center rounded-full"
+            style={{ backgroundColor: '#F3F4F6' }}
+          >
+            <Ionicons name="people-outline" size={32} color="#9CA3AF" />
           </View>
-        </Button>
-        
-        {valid && (
-          <Text className="mt-2 text-center font-jarkataregular text-xs text-gray-500">
-            Ready to send to @{kaluubaName}
+          <Text className="text-base font-medium text-black mb-2">
+            Recent recipients
           </Text>
-        )}
+          <Text className="text-sm text-gray-500">
+            No recent recipients to show
+          </Text>
+        </View>
       </View>
-    </Container>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 

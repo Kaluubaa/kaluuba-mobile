@@ -1,9 +1,7 @@
-import React, { useCallback, useState } from 'react';
-import { Pressable, Text, TouchableOpacity, View, ScrollView, RefreshControl } from 'react-native';
-import { router } from '~/.expo/types/router';
+import React from 'react';
+import { Text, TouchableOpacity, View, ScrollView, RefreshControl } from 'react-native';
 import Clients from '~/components/invoice/Clients';
 import { InvoiceList } from '~/components/invoice/InvoiceList';
-import { Button } from '~/components/reusbales/Button';
 import { Container } from '~/components/reusbales/Container';
 import Header from '~/components/reusbales/Header';
 import { useGetClient, useGetUserInvoices } from '~/hooks/use-invoice';
@@ -58,38 +56,34 @@ const InvoicesPage = () => {
         </View>
       </View>
 
-      <ScrollView 
-        className="flex-1"
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor="#6366f1"
-            colors={['#6366f1']}
-            title="Pull to refresh"
-            titleColor="#6b7280"
-          />
-        }>
-        {activeTab === 'invoices' && (
+      {activeTab === 'invoices' && (
+        <ScrollView 
+          className="flex-1"
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor="#6366f1"
+              colors={['#6366f1']}
+              title="Pull to refresh"
+              titleColor="#6b7280"
+            />
+          }>
           <View className="flex-1 py-4">
             <InvoiceList invoices={invoices} />
           </View>
-        )}
-        {activeTab === 'clients' && (
-          <View className="flex-1 py-4">
-            <Clients clients={allClients} />
-            {/* <Text className="text-gray-500">Clients will be implemented soon.</Text> */}
-          </View>
-        )}
-
-        {/* Uncomment this when the customers tab is implemented */}
-        {/* {activeTab === 'customers' && (
-          <View className="flex-1">
-            <CustomerList customers={customers} />
-          </View>
-        )} */}
-        {/* <InvoiceList invoices={invoices} />; */}
-      </ScrollView>
+        </ScrollView>
+      )}
+      
+      {activeTab === 'clients' && (
+        <View className="flex-1">
+          <Clients 
+            clients={allClients} 
+            onRefresh={onRefresh}
+            refreshing={refreshing}
+          />
+        </View>
+      )}
     </Container>
   );
 };

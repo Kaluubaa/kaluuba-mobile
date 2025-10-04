@@ -1,14 +1,35 @@
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Alert, Share } from 'react-native';
 import React from 'react';
 import { Container } from '~/components/reusbales/Container';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { images } from '~/constants/images';
 import QRCode from 'react-native-qrcode-svg';
 import { useAuth } from '~/context/AuthContext';
+import * as Clipboard from 'expo-clipboard';
 
 const Recieve = () => {
   const { user } = useAuth();
+  const walletAddress = user?.smartAccountAddress || '';
+
+  const handleCopy = async () => {
+    try {
+      await Clipboard.setStringAsync(walletAddress);
+      Alert.alert('Copied!', 'Wallet address copied to clipboard');
+    } catch {
+      Alert.alert('Error', 'Failed to copy address');
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      await Share.share({
+        message: `Send USDC to my wallet: ${walletAddress}`,
+        title: 'My USDC Wallet Address',
+      });
+    } catch {
+      Alert.alert('Error', 'Failed to share address');
+    }
+  };
 
   return (
     <Container className="flex-1  px-2 py-2">
@@ -44,7 +65,7 @@ const Recieve = () => {
         </View>
 
         <View className="size-[230px] items-center justify-center rounded-3xl border border-gray-100 bg-white">
-          <QRCode value={user?.walletAddress || user?.smartAccountAddress || ''} size={180} />
+          <QRCode value={walletAddress} size={180} />
         </View>
 
         <View className="w-full flex-1 gap-4">
@@ -53,17 +74,23 @@ const Recieve = () => {
               Your USDC Address
             </Text>
             <Text className="text-center font-jarkataregular text-xs text-gray-700">
-              {user?.walletAddress || user?.smartAccountAddress || 'No address available'}
+              {walletAddress || 'No address available'}
             </Text>
           </View>
 
           <View className="flex-row justify-center gap-3">
-            <TouchableOpacity className="w-[100px] flex-row items-center justify-center gap-2 rounded-full bg-primary-500/10 px-3 py-2">
+            <TouchableOpacity 
+              onPress={handleShare}
+              className="w-[100px] flex-row items-center justify-center gap-2 rounded-full bg-primary-500/10 px-3 py-2"
+            >
               <Ionicons name="share-outline" size={16} color="#3B82F6" />
               <Text className="text-primary font-jarkatamedium text-sm">Share</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity className="w-[100px] flex-row items-center justify-center gap-2 rounded-full bg-primary-500 px-3 py-2">
+            <TouchableOpacity 
+              onPress={handleCopy}
+              className="w-[100px] flex-row items-center justify-center gap-2 rounded-full bg-primary-500 px-3 py-2"
+            >
               <Ionicons name="copy-outline" size={16} color="white" />
               <Text className="font-jarkatamedium text-sm text-white">Copy</Text>
             </TouchableOpacity>

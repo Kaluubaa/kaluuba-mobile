@@ -1,22 +1,29 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Text, TouchableOpacity, View, SafeAreaView, StatusBar } from 'react-native';
 import { CreateInvoice } from '~/components/invoice/CreateInvoice';
-import { Container } from '~/components/reusbales/Container';
 
 export default function CreateInvoiceScreen() {
   return (
-    <Container className="flex-1 bg-white px-2">
-      <View className="flex gap-4">
-        <TouchableOpacity onPress={() => router.back()} className='w-1/3'>
-
-        <Ionicons name="chevron-back" size={20} />
-        </TouchableOpacity>
-        <Text className="font-clashmedium text-lg tracking-wider text-gray-600">Create New Invoice</Text>
+    <SafeAreaView className="flex-1 bg-white">
+      <StatusBar barStyle="dark-content" backgroundColor="white" />
+      
+      <View className="flex-1 px-6 pt-4 pb-3">
+        <View className="mb-8 flex gap-3">
+          <TouchableOpacity 
+            onPress={() => router.back()}
+            className="mr-4"
+          >
+            <Ionicons name="arrow-back" size={24} color="#000" />
+          </TouchableOpacity>
+          <Text className="text-[20px] font-jarkatabold text-black">
+            Create New Invoice
+          </Text>
+        </View>
+        
+        <CreateInvoice />
       </View>
-      <CreateInvoice />
-    </Container>
+    </SafeAreaView>
   );
 }
