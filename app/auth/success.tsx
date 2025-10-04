@@ -1,5 +1,4 @@
 import { View, Text, TouchableOpacity } from 'react-native';
-import React from 'react';
 import { Container } from '~/components/reusbales/Container';
 import { Button } from '~/components/reusbales/Button';
 import { router } from 'expo-router';
@@ -12,12 +11,12 @@ const Success = () => {
       <View className="flex-1 px-4">
         <View className="w-full flex-1 items-center justify-center gap-4">
           <View className="h-32 w-32 items-center justify-center">
-            <LottieView
+            {/* <LottieView
               autoPlay
               loop={false}
               source={require('../../assets/animations/success.json')}
               style={{ width: '100%', height: '100%' }}
-            />
+            /> */}
           </View>
 
           <Text className=" mb-4 text-center font-clashmedium text-lg tracking-wider text-gray-600">

@@ -39,7 +39,7 @@ const Home = () => {
 
   return (
     <View className="flex-1">
-      <Container className="flex-1 bg-[#f5f5f5]  px-2 pt-6">
+      <Container className="flex-1 bg-gray-50  px-2 pt-6">
         <ScrollView 
           showsVerticalScrollIndicator={false}
           refreshControl={
@@ -52,7 +52,7 @@ const Home = () => {
               titleColor="#6b7280"
             />
           }>
-          <View className="flex-1  gap-6">
+          <View className="flex-1  gap-4">
             <View className="mb-4 flex-row justify-between">
               <View className="flex-row items-center gap-2">
                 <View className="h-12 w-12 overflow-hidden rounded-full  border border-primary-500 bg-primary-300">

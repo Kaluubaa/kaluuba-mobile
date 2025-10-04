@@ -27,7 +27,7 @@ const TransactionHistory = ({ transactions }: Prop) => {
   return (
     <View className="mt-8 flex-1 px-2">
       <View className="mb-3 flex-row items-center justify-between">
-        <Text className="font-clashmedium tracking-wider text-gray-800">Recent Transactions</Text>
+        <Text className="font-jarkatabold tracking-wider text-gray-800">Recent Transactions</Text>
         <TouchableOpacity onPress={() => router.push('/history')}>
           <View className="flex-row items-center gap-2">
             <Text className="font-jarkatamedium text-sm text-primary-600">See all</Text>

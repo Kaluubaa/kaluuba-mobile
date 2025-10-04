@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 import { Linking } from 'react-native';
 import { ITransaction } from '~/types/transactions.types';
@@ -14,21 +15,44 @@ interface TransactionItemProps {
 const getStatusStyles = (status: string) => {
   switch (status) {
     case 'confirmed':
-      return 'bg-primary-100 text-primary-600';
+    case 'completed':
+      return 'text-green-600';
     case 'pending':
-      return 'bg-yellow-100 text-yellow-600';
+      return 'text-yellow-600';
     case 'failed':
-      return 'bg-red-100 text-red-600';
+      return 'text-red-600';
     default:
-      return 'bg-gray-100 text-gray-600';
+      return 'text-gray-600';
   }
 };
 
 const TransactionItem: React.FC<TransactionItemProps> = ({ transaction, onPress }) => {
+  const handlePress = () => {
+    if (onPress) {
+      onPress();
+    } else {
+      // Navigate to transaction receipt page with transaction details
+      router.push({
+        pathname: '/transaction-receipt',
+        params: {
+          amount: transaction.amount,
+          currency: transaction.tokenSymbol,
+          recipient: `@${transaction.counterparty.username}`,
+          transactionId: transaction.transactionId,
+          fee: '0.00', // You might want to add fee to transaction type
+          timestamp: transaction.confirmedAt || transaction.createdAt,
+          status: transaction.status,
+          type: transaction.type,
+          counterparty: transaction.counterparty.username,
+        },
+      });
+    }
+  };
+
   return (
     <TouchableOpacity
       className="relative w-full flex-row items-center border-b border-gray-200 py-4"
-      onPress={onPress}
+      onPress={handlePress}
     >
       <View
         className={`mr-3 h-8 w-8 items-center justify-center rounded-full ${
@@ -42,13 +66,15 @@ const TransactionItem: React.FC<TransactionItemProps> = ({ transaction, onPress 
         />
       </View>
       <View className="flex-1 gap-1">
-        <Text className="font-jarkatamedium text-sm text-gray-700">
-          {transaction.type === 'outgoing' ? 'Sent ' : 'Received '}
-          <Text className="text-black">
-            {transaction.amount} {transaction.tokenSymbol}
-          </Text>{' '}
-          {transaction.type === 'outgoing' ? 'to ' : 'from '} @{transaction.counterparty.username}
-        </Text>
+        <View className="flex-row items-center justify-between">
+          <Text className="font-jarkatamedium text-sm text-gray-700 flex-1">
+            {transaction.type === 'outgoing' ? 'Sent ' : 'Received '}
+            {transaction.type === 'outgoing' ? 'to ' : 'from '} @{transaction.counterparty.username}
+          </Text>
+          <Text className="font-jarkatabold text-lg text-black">
+            {transaction.type === 'outgoing' ? '-' : '+'}${transaction.amount}
+          </Text>
+        </View>
         <Text className="font-jarkataregular text-xs text-gray-500">
           {transaction.status === 'pending' || transaction.status === 'failed'
             ? `Pending since ${formatTransactionDate(transaction.createdAt, 'relative')}`
@@ -61,9 +87,14 @@ const TransactionItem: React.FC<TransactionItemProps> = ({ transaction, onPress 
             </Text>
           </TouchableOpacity>
         )} */}
-        <View className="absolute right-0">
+        <View className="absolute right-0 bottom-0 flex-row items-center">
+          <View className={`w-2 h-2 rounded-full mr-2 ${
+            transaction.status === 'confirmed' || transaction.status === 'completed' ? 'bg-green-500' :
+            transaction.status === 'pending' ? 'bg-yellow-500' :
+            transaction.status === 'failed' ? 'bg-red-500' : 'bg-gray-500'
+          }`} />
           <Text
-            className={`rounded-full px-2 py-1 font-jarkataregular text-xs ${getStatusStyles(
+            className={`font-jarkataregular text-xs ${getStatusStyles(
               transaction.status
             )}`}
           >

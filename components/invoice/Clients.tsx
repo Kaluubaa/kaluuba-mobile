@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, FlatList, Pressable, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, Pressable, TouchableOpacity, RefreshControl } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { IClient } from '~/types/invoice.t';
@@ -7,9 +7,11 @@ import { Button } from '../reusbales/Button';
 
 type Props = {
   clients: IClient[];
+  onRefresh?: () => void;
+  refreshing?: boolean;
 };
 
-const Clients = ({ clients }: Props) => {
+const Clients = ({ clients, onRefresh, refreshing = false }: Props) => {
   const renderClient = ({ item }: { item: IClient }) => {
     const initial = item.contactName
       ? item.contactName.charAt(0).toUpperCase()
@@ -60,6 +62,18 @@ const Clients = ({ clients }: Props) => {
           renderItem={renderClient}
           keyExtractor={(item) => item.id.toString()}
           contentContainerClassName="p-4"
+          refreshControl={
+            onRefresh ? (
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                tintColor="#6366f1"
+                colors={['#6366f1']}
+                title="Pull to refresh"
+                titleColor="#6b7280"
+              />
+            ) : undefined
+          }
         />
       )}
 

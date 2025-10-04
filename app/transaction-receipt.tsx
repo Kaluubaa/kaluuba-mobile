@@ -5,13 +5,25 @@ import { Ionicons } from '@expo/vector-icons';
 import LottieView from 'lottie-react-native';
 import * as Clipboard from 'expo-clipboard';
 
-const Success = () => {
-  const { amount, currency, recipient, transactionId, fee, timestamp, status, errorMessage } = useLocalSearchParams();
+const TransactionReceipt = () => {
+  const { 
+    amount, 
+    currency, 
+    recipient, 
+    transactionId, 
+    fee, 
+    timestamp, 
+    status, 
+    errorMessage,
+    type,
+    counterparty
+  } = useLocalSearchParams();
   
   const transactionStatus = status || 'completed';
-  const isCompleted = transactionStatus === 'completed';
+  const isCompleted = transactionStatus === 'completed' || transactionStatus === 'confirmed';
   const isPending = transactionStatus === 'pending';
   const isFailed = transactionStatus === 'failed';
+  const isOutgoing = type === 'outgoing';
   
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -26,9 +38,21 @@ const Success = () => {
   const copyToClipboard = async (text: string) => {
     try {
       await Clipboard.setStringAsync(text);
-      Alert.alert('Copied!', 'Reference code copied to clipboard');
+      Alert.alert('Copied!', 'Transaction ID copied to clipboard');
     } catch {
       Alert.alert('Error', 'Failed to copy');
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      const shareText = `Transaction Receipt\n\nAmount: ${isOutgoing ? '-' : '+'}$${amount} ${currency}\n${isOutgoing ? 'Sent to' : 'Received from'}: ${recipient}\nTransaction ID: ${transactionId}\nStatus: ${transactionStatus}\nDate: ${formatDate(timestamp as string)}`;
+      
+      // You can implement actual sharing here
+      Alert.alert('Share Receipt', 'Receipt sharing will be implemented soon');
+    } catch (error) {
+      console.error('Share error:', error);
+      Alert.alert('Error', 'Failed to share receipt');
     }
   };
 
@@ -40,13 +64,13 @@ const Success = () => {
         {/* Header */}
         <View className="mb-8 flex-row items-center">
           <TouchableOpacity 
-            onPress={() => router.replace('/(tabs)/home')}
+            onPress={() => router.back()}
             className="mr-4"
           >
             <Ionicons name="arrow-back" size={24} color="#000" />
           </TouchableOpacity>
           <Text className="text-2xl font-jarkatabold text-black">
-            Transaction Details
+            Transaction Receipt
           </Text>
         </View>
 
@@ -57,7 +81,7 @@ const Success = () => {
               <LottieView
                 autoPlay
                 loop={false}
-                source={require('../../assets/animations/success.json')}
+                source={require('../assets/animations/success.json')}
                 style={{ width: '100%', height: '100%' }}
               />
             )}
@@ -65,7 +89,7 @@ const Success = () => {
               <LottieView
                 autoPlay
                 loop={true}
-                source={require('../../assets/animations/loading-drop.json')}
+                source={require('../assets/animations/loading-drop.json')}
                 style={{ width: '100%', height: '100%' }}
               />
             )}
@@ -81,10 +105,12 @@ const Success = () => {
             isPending ? 'text-blue-600' : 
             'text-red-600'
           }`}>
-            {isCompleted ? 'SEND' : isPending ? 'PENDING' : 'FAILED'}
+            {isOutgoing ? 'SENT' : 'RECEIVED'}
           </Text>
           
-          <Text className="text-4xl font-jarkatabold text-black">${amount}</Text>
+          <Text className="text-4xl font-jarkatabold text-black">
+            {isOutgoing ? '-' : '+'}${amount}
+          </Text>
           
           {isPending && (
             <Text className="text-sm font-jarkataregular text-blue-600 mt-2 text-center">
@@ -103,41 +129,55 @@ const Success = () => {
         <View className="bg-white rounded-xl p-6 mb-6">
           <View className="flex-row justify-between items-center mb-4">
             <Text className="text-sm font-jarkataregular text-gray-600">Date and Time</Text>
-            <Text className="text-sm font-jarkataregular text-black">{formatDate(timestamp as string)}</Text>
+            <Text className="text-sm font-jarkatamedium text-black">
+              {formatDate(timestamp as string)}
+            </Text>
           </View>
           
           <View className="flex-row justify-between items-center mb-4">
             <Text className="text-sm font-jarkataregular text-gray-600">Transaction Type</Text>
-            <Text className="text-sm font-jarkataregular text-black">Send</Text>
+            <View className="flex-row items-center">
+              <Ionicons 
+                name={isOutgoing ? 'arrow-up' : 'arrow-down'} 
+                size={16} 
+                color={isOutgoing ? '#167D7F' : '#10B981'} 
+              />
+              <Text className="text-sm font-jarkatamedium text-black ml-2">
+                {isOutgoing ? 'Send' : 'Receive'}
+              </Text>
+            </View>
           </View>
           
           <View className="flex-row justify-between items-center mb-4">
-            <Text className="text-sm font-jarkataregular text-gray-600">Amount Sent</Text>
-            <Text className="text-sm font-jarkataregular text-black">${amount} {currency}</Text>
+            <Text className="text-sm font-jarkataregular text-gray-600">Amount</Text>
+            <Text className="text-sm font-jarkatamedium text-black">
+              ${amount} {currency}
+            </Text>
+          </View>
+          
+          {isOutgoing && (
+            <View className="flex-row justify-between items-center mb-4">
+              <Text className="text-sm font-jarkataregular text-gray-600">Fee</Text>
+              <Text className="text-sm font-jarkatamedium text-black">${fee || '0.00'}</Text>
+            </View>
+          )}
+          
+          <View className="flex-row justify-between items-center mb-4">
+            <Text className="text-sm font-jarkataregular text-gray-600">
+              {isOutgoing ? 'Sent to' : 'Received from'}
+            </Text>
+            <Text className="text-sm font-jarkatamedium text-black">{recipient}</Text>
           </View>
           
           <View className="flex-row justify-between items-center mb-4">
-            <Text className="text-sm font-jarkataregular text-gray-600">Amount Received</Text>
-            <Text className="text-sm font-jarkataregular text-black">${amount} {currency}</Text>
-          </View>
-          
-          <View className="flex-row justify-between items-center mb-4">
-            <Text className="text-sm font-jarkataregular text-gray-600">Fee</Text>
-            <Text className="text-sm font-jarkataregular text-black">${fee}</Text>
-          </View>
-          
-          <View className="flex-row justify-between items-center mb-4">
-            <Text className="text-sm font-jarkataregular text-gray-600">Recipient</Text>
-            <Text className="text-sm font-jarkataregular text-black">@{recipient}</Text>
-          </View>
-          
-          <View className="flex-row justify-between items-center mb-4">
-            <Text className="text-sm font-jarkataregular text-gray-600">Reference Code</Text>
+            <Text className="text-sm font-jarkataregular text-gray-600">Transaction ID</Text>
             <TouchableOpacity 
               onPress={() => copyToClipboard(transactionId as string)}
               className="flex-row items-center"
             >
-              <Text className="text-sm font-jarkataregular text-black mr-2">{transactionId}</Text>
+              <Text className="text-sm font-jarkatamedium text-black mr-2">
+                {transactionId?.toString().slice(0, 8)}...
+              </Text>
               <Ionicons name="copy-outline" size={16} color="#9CA3AF" />
             </TouchableOpacity>
           </View>
@@ -165,10 +205,7 @@ const Success = () => {
         <View className="flex-1 justify-end pb-6">
           {isCompleted && (
             <TouchableOpacity
-              onPress={() => {
-                // TODO: Implement share receipt functionality
-                Alert.alert('Share Receipt', 'Receipt sharing will be implemented soon');
-              }}
+              onPress={handleShare}
               className="w-full py-4 rounded-xl bg-[#167D7F] mb-4"
             >
               <Text className="text-center text-base font-jarkatamedium text-white">
@@ -217,12 +254,11 @@ const Success = () => {
           
           <TouchableOpacity
             onPress={() => {
-              // TODO: Implement report problem functionality
               Alert.alert('Report Problem', 'Problem reporting will be implemented soon');
             }}
-            className="mt-4"
+            className="w-full py-2 mt-2"
           >
-            <Text className="text-center text-sm font-jarkataregular text-[#167D7F]">
+            <Text className="text-center text-sm font-jarkataregular text-gray-500">
               Report a problem
             </Text>
           </TouchableOpacity>
@@ -232,4 +268,4 @@ const Success = () => {
   );
 };
 
-export default Success;
+export default TransactionReceipt;
