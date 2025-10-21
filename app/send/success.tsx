@@ -169,7 +169,7 @@ const Success = () => {
                 // TODO: Implement share receipt functionality
                 Alert.alert('Share Receipt', 'Receipt sharing will be implemented soon');
               }}
-              className="w-full py-4 rounded-xl bg-[#167D7F] mb-4"
+              className="w-full py-4 rounded-xl bg-primary-500 mb-4"
             >
               <Text className="text-center text-base font-jarkatamedium text-white">
                 Share Transaction Receipt
@@ -222,7 +222,7 @@ const Success = () => {
             }}
             className="mt-4"
           >
-            <Text className="text-center text-sm font-jarkataregular text-[#167D7F]">
+            <Text className="text-center text-sm font-jarkataregular text-primary-500">
               Report a problem
             </Text>
           </TouchableOpacity>

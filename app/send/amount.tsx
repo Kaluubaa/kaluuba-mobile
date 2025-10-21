@@ -96,7 +96,7 @@ const Amount = () => {
           });
         },
         onError: (error) => {
-          console.error('Transaction failed:', error);
+          console.log('Transaction failed:', error);
           // Show receipt with pending/failed status instead of just alert
           const transactionId = 'TXN' + Date.now();
           const errorMessage = error?.message || 'Transaction failed';
@@ -323,7 +323,7 @@ const Amount = () => {
                   <Image source={currency.logo} className="mr-3 h-6 w-6" />
                   <Text className="font-jarkatamedium text-base text-black">{currency.name}</Text>
                   {sendCurrency === currency.symbol && (
-                    <Ionicons name="checkmark" size={20} color="#167D7F" className="ml-auto" />
+                    <Ionicons name="checkmark" size={20} color="#306B4F" className="ml-auto" />
                   )}
           </TouchableOpacity>
               ))}
@@ -355,7 +355,7 @@ const Amount = () => {
                   <Image source={currency.logo} className="mr-3 h-6 w-6" />
                   <Text className="font-jarkatamedium text-base text-black">{currency.name}</Text>
                   {receiveCurrency === currency.symbol && (
-                    <Ionicons name="checkmark" size={20} color="#167D7F" className="ml-auto" />
+                    <Ionicons name="checkmark" size={20} color="#306B4F" className="ml-auto" />
                   )}
           </TouchableOpacity>
               ))}
@@ -420,7 +420,7 @@ const Amount = () => {
               
           <TouchableOpacity
                 onPress={confirmSend}
-                className="flex-1 py-4 rounded-xl bg-[#167D7F]"
+                className="flex-1 py-4 rounded-xl bg-primary-500"
               >
                 <Text className="text-center text-base font-jarkatamedium text-white">
                   Confirm Send

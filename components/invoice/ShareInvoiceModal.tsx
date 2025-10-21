@@ -35,7 +35,7 @@ const ShareInvoiceModal: React.FC<ShareInvoiceModalProps> = ({ visible, onClose,
         title: invoice.title,
       });
     } catch (error) {
-      console.error('Error sharing invoice:', error);
+      console.log('Error sharing invoice:', error);
     }
   };
 

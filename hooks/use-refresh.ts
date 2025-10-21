@@ -14,7 +14,7 @@ export const useRefresh = (refetchFunctions: (() => Promise<any>)[]) => {
       // Execute all refetch functions in parallel
       await Promise.all(refetchFunctions.map(refetch => refetch()));
     } catch (error) {
-      console.error('Error refreshing data:', error);
+      console.log('Error refreshing data:', error);
     } finally {
       setRefreshing(false);
     }

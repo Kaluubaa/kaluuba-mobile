@@ -51,7 +51,7 @@ const TransactionItem: React.FC<TransactionItemProps> = ({ transaction, onPress 
 
   return (
     <TouchableOpacity
-      className="relative w-full flex-row items-center border-b border-gray-200 py-4"
+      className="relative w-full flex-row items-center  border-gray-200 py-4"
       onPress={handlePress}
     >
       <View
@@ -59,11 +59,11 @@ const TransactionItem: React.FC<TransactionItemProps> = ({ transaction, onPress 
           transaction.type === 'outgoing' ? 'bg-primary-100' : 'bg-primary-100'
         }`}
       >
-        <Ionicons
-          name={transaction.type === 'outgoing' ? 'arrow-up' : 'arrow-down'}
-          size={16}
-          color={transaction.type === 'outgoing' ? '#167D7F' : '#167D7F'}
-        />
+                 <Ionicons
+                   name={transaction.type === 'outgoing' ? 'arrow-up' : 'arrow-down'}
+                   size={16}
+                   color={transaction.type === 'outgoing' ? '#306B4F' : '#306B4F'}
+                 />
       </View>
       <View className="flex-1 gap-1">
         <View className="flex-row items-center justify-between">
@@ -71,7 +71,7 @@ const TransactionItem: React.FC<TransactionItemProps> = ({ transaction, onPress 
             {transaction.type === 'outgoing' ? 'Sent ' : 'Received '}
             {transaction.type === 'outgoing' ? 'to ' : 'from '} @{transaction.counterparty.username}
           </Text>
-          <Text className="font-jarkatabold text-lg text-black">
+          <Text className="font-jarkatasemibold text-sm text-gray-600">
             {transaction.type === 'outgoing' ? '-' : '+'}${transaction.amount}
           </Text>
         </View>

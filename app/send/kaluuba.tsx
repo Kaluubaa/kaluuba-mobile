@@ -116,7 +116,7 @@ const Kaluuba = () => {
             />
                 <View className="ml-2">
               {isSearching ? (
-                    <ActivityIndicator size="small" color="#167D7F" />
+                    <ActivityIndicator size="small" color="#306B4F" />
               ) : valid ? (
                     <Ionicons name="checkmark-circle" size={22} color="#10b981" />
               ) : hasSearched && searchError ? (
@@ -126,7 +126,7 @@ const Kaluuba = () => {
               </View>
 
               {isSearching && (
-                <Text className="mt-2 text-sm text-[#167D7F]">Validating tag…</Text>
+                <Text className="mt-2 text-sm text-primary-500">Validating tag…</Text>
               )}
               {hasSearched && searchError ? (
                 <Text className="mt-2 text-sm text-red-600">{searchError}</Text>
@@ -148,7 +148,7 @@ const Kaluuba = () => {
           <View className="mt-auto mb-6">
             <TouchableOpacity
               onPress={handleContinue}
-              className={`w-full py-4 rounded-xl ${valid ? 'bg-[#167D7F]' : 'bg-gray-200'}`}
+              className={`w-full py-4 rounded-xl ${valid ? 'bg-primary-500' : 'bg-gray-200'}`}
               disabled={!valid}
             >
               <Text className={`text-center text-base font-medium ${valid ? 'text-white' : 'text-gray-400'}`}>Continue</Text>
@@ -190,9 +190,9 @@ const Kaluuba = () => {
             <View className="flex-row items-center">
               <View 
                 className="mr-3 h-10 w-10 items-center justify-center rounded-full"
-                style={{ backgroundColor: '#E6F7F8' }}
+                style={{ backgroundColor: '#f0f9f4' }}
               >
-                <Ionicons name="person-add-outline" size={20} color="#167D7F" />
+                <Ionicons name="person-add-outline" size={20} color="#306B4F" />
               </View>
               <Text className="text-base font-medium text-black">
                 Send to a new recipient

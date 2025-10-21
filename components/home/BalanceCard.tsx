@@ -1,6 +1,7 @@
 import { View, Text, Pressable, Image, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import { ArrowsPathIcon } from '~/components/icons/heroicons';
 import { images } from '~/constants/images';
 import { router } from 'expo-router';
 import { Balance } from '~/types/user';
@@ -18,7 +19,7 @@ const BalanceCard = ({ balances, loadingBalance, openRecieveSheet }: Props) => {
 
   const currencies = [
     { symbol: 'USDC', name: 'USDC', logo: images.usdc },
-    { symbol: 'USDT', name: 'USDT', logo: images.usdc }, 
+    { symbol: 'USDT', name: 'USDT', logo: images.usdc },
     { symbol: 'CNGN', name: 'CNGN', logo: images.usdc },
   ];
 
@@ -28,11 +29,7 @@ const BalanceCard = ({ balances, loadingBalance, openRecieveSheet }: Props) => {
     //   icon: 'document-attach-outline',
     //   onPress: () => router.push('/invoices/create'),
     // },
-    {
-      title: 'Kaluuba Scan',
-      icon: 'scan-outline',
-      onPress: () => router.push('/scan'),
-    },
+
     {
       title: 'Recieve',
       icon: 'arrow-down-outline',
@@ -42,6 +39,12 @@ const BalanceCard = ({ balances, loadingBalance, openRecieveSheet }: Props) => {
       title: 'Send',
       icon: 'arrow-up-outline',
       onPress: () => router.push('/send/send'),
+    },
+    {
+      title: 'Convert',
+      icon: 'custom',
+      customIcon: 'ArrowsPathIcon',
+      onPress: () => {},
     },
   ];
 
@@ -63,19 +66,21 @@ const BalanceCard = ({ balances, loadingBalance, openRecieveSheet }: Props) => {
   };
 
   return (
-    <View className="border border-gray-200 relative flex min-h-[150px] w-full items-center rounded-2xl bg-white py-6">
+    <View className="relative flex min-h-[150px] w-full items-center rounded-2xl bg-primary-600 py-6">
       <Image
         source={images.pattern}
         className="absolute inset-0 h-[150px] w-full "
         style={{ resizeMode: 'cover' }}
       />
       <View>
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => SheetManager.show('balance-currency-sheet')}
-          className="w-full flex-row items-center gap-3 rounded-full bg-gray-200 px-3 py-1.5"
-        >
+          className="w-full flex-row items-center gap-3 rounded-full bg-white/70 px-3 py-1.5">
           <View className="size-5 overflow-hidden rounded-full bg-black">
-            <Image source={currencies.find(c => c.symbol === selectedCurrency)?.logo || images.usdc} className="h-full w-full" />
+            <Image
+              source={currencies.find((c) => c.symbol === selectedCurrency)?.logo || images.usdc}
+              className="h-full w-full"
+            />
           </View>
           <Text className="font-jarkatamedium text-sm text-gray-600">{selectedCurrency}</Text>
           <Ionicons name="chevron-down" size={15} color={'#6B7280'} />
@@ -83,7 +88,7 @@ const BalanceCard = ({ balances, loadingBalance, openRecieveSheet }: Props) => {
       </View>
 
       <View className="mt-6 flex-row items-center gap-2">
-        <Text className="font-clashmedium text-[26px] tracking-widest text-gray-900">
+        <Text className="font-clashmedium text-[24px] tracking-widest text-gray-50">
           {loadingBalance ? (
             <View className="h-7 w-24 animate-pulse rounded bg-gray-300" />
           ) : showBalance ? (
@@ -96,7 +101,7 @@ const BalanceCard = ({ balances, loadingBalance, openRecieveSheet }: Props) => {
           <Ionicons
             name={showBalance ? 'eye-outline' : 'eye-off-outline'}
             size={16}
-            color="#9ca3af"
+            color="#ffffff"
           />
         </Pressable>
       </View>
@@ -104,10 +109,18 @@ const BalanceCard = ({ balances, loadingBalance, openRecieveSheet }: Props) => {
       <View className="mt-8 flex-row gap-10 px-3">
         {actions.map((action, index) => (
           <TouchableOpacity className="items-center" onPress={action.onPress} key={index}>
-            <View className="shadow-xs h-[45px] w-[45px] items-center justify-center rounded-full border border-gray-200 bg-white">
-              <Ionicons name={action.icon as keyof typeof Ionicons.glyphMap} size={15} />
+            <View className="shadow-xs h-[45px] w-[45px] items-center justify-center rounded-full border border-gray-200 bg-white ">
+              {action.icon === 'custom' && action.customIcon === 'ArrowsPathIcon' ? (
+                <ArrowsPathIcon size={15} color="#306B4F" />
+              ) : (
+                <Ionicons
+                  name={action.icon as keyof typeof Ionicons.glyphMap}
+                  size={15}
+                  color="#306B4F"
+                />
+              )}
             </View>
-            <Text className="mt-2 text-center font-jarkataregular text-xs text-gray-800">
+            <Text className="mt-2 text-center font-jarkatamedium text-sm text-gray-50">
               {action.title}
             </Text>
           </TouchableOpacity>
@@ -125,8 +138,10 @@ const BalanceCard = ({ balances, loadingBalance, openRecieveSheet }: Props) => {
           borderTopRightRadius: 20,
           backgroundColor: 'white',
         }}>
-        <View className="py-6 px-6">
-          <Text className="text-lg font-jarkatabold text-black mb-6 text-center">Select Currency</Text>
+        <View className="px-6 py-6">
+          <Text className="mb-6 text-center font-jarkatabold text-lg text-black">
+            Select Currency
+          </Text>
           {currencies.map((currency, index) => (
             <TouchableOpacity
               key={index}
@@ -134,17 +149,16 @@ const BalanceCard = ({ balances, loadingBalance, openRecieveSheet }: Props) => {
                 setSelectedCurrency(currency.symbol);
                 SheetManager.hide('balance-currency-sheet');
               }}
-              className="flex-row items-center py-4 border-b border-gray-100"
-            >
-              <Image source={currency.logo} className="w-6 h-6 mr-3" />
+              className="flex-row items-center border-b border-gray-100 py-4">
+              <Image source={currency.logo} className="mr-3 h-6 w-6" />
               <View className="flex-1">
-                <Text className="text-base font-jarkatamedium text-black">{currency.name}</Text>
-                <Text className="text-sm font-jarkataregular text-gray-500">
+                <Text className="font-jarkatamedium text-base text-black">{currency.name}</Text>
+                <Text className="font-jarkataregular text-sm text-gray-500">
                   Balance: ${Number(getBalanceForCurrency(currency.symbol)).toFixed(2)}
                 </Text>
               </View>
               {selectedCurrency === currency.symbol && (
-                <Ionicons name="checkmark" size={20} color="#167D7F" />
+                <Ionicons name="checkmark" size={20} color="#306B4F" />
               )}
             </TouchableOpacity>
           ))}

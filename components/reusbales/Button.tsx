@@ -27,8 +27,8 @@ export const Button = ({
 
   const variantStyles = {
     primary: 'bg-primary-500 active:bg-primary-600',
-    secondary: 'bg-gray-100 active:bg-gray-200',
-    outline: 'border border-primary-500 bg-transparent',
+    secondary: 'bg-accent-100 active:bg-accent-200',
+    outline: 'border border-primary-500 bg-transparent active:bg-primary-50',
   };
 
   const sizeStyles = {
@@ -41,7 +41,7 @@ export const Button = ({
 
   const textVariantStyles = {
     primary: 'text-white',
-    secondary: 'text-gray-900',
+    secondary: 'text-primary-700',
     outline: 'text-primary-500',
   };
 

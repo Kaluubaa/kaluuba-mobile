@@ -1,5 +1,5 @@
-import { View, Text, Image, ScrollView, ActivityIndicator, RefreshControl } from 'react-native';
-import React, { useCallback, useRef } from 'react';
+import { View, Text, Image, ScrollView, ActivityIndicator, RefreshControl, BackHandler } from 'react-native';
+import React, { useCallback, useRef, useEffect } from 'react';
 
 import { Container } from '~/components/reusbales/Container';
 import BalanceCard from '~/components/home/BalanceCard';
@@ -36,6 +36,19 @@ const Home = () => {
     console.log('handleSheetChanges', index);
   }, []);
 
+  // Handle back button to close/minimize app instead of going to login
+  useEffect(() => {
+    const backAction = () => {
+      // Close the app or minimize it
+      BackHandler.exitApp();
+      return true; // Prevent default behavior
+    };
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+    return () => backHandler.remove();
+  }, []);
+
 
   return (
     <View className="flex-1">
@@ -59,9 +72,9 @@ const Home = () => {
                   <Image source={images.user} className="h-full w-full" />
                 </View>
                 <View className="gap-0.5">
-                  <Text className="font-jarkatasemibold text-primary-600">@{user?.username}</Text>
-                  <Text className="font-jarkatamedium text-xs text-gray-600">
-                    Money is energy, direct it with purpose
+                  <Text className="font-jarkatasemibold text-lg text-gray-900">@{user?.username}</Text>
+                  <Text className="font-jarkatamedium text-sm text-gray-600">
+                    Money is energy
                   </Text>
                 </View>
               </View>

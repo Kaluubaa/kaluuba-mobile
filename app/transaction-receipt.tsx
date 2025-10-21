@@ -51,7 +51,7 @@ const TransactionReceipt = () => {
       // You can implement actual sharing here
       Alert.alert('Share Receipt', 'Receipt sharing will be implemented soon');
     } catch (error) {
-      console.error('Share error:', error);
+      console.log('Share error:', error);
       Alert.alert('Error', 'Failed to share receipt');
     }
   };
@@ -140,7 +140,7 @@ const TransactionReceipt = () => {
               <Ionicons 
                 name={isOutgoing ? 'arrow-up' : 'arrow-down'} 
                 size={16} 
-                color={isOutgoing ? '#167D7F' : '#10B981'} 
+                color={isOutgoing ? '#306B4F' : '#10B981'} 
               />
               <Text className="text-sm font-jarkatamedium text-black ml-2">
                 {isOutgoing ? 'Send' : 'Receive'}
@@ -206,7 +206,7 @@ const TransactionReceipt = () => {
           {isCompleted && (
             <TouchableOpacity
               onPress={handleShare}
-              className="w-full py-4 rounded-xl bg-[#167D7F] mb-4"
+              className="w-full py-4 rounded-xl bg-primary-500 mb-4"
             >
               <Text className="text-center text-base font-jarkatamedium text-white">
                 Share Transaction Receipt

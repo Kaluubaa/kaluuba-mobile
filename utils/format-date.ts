@@ -18,7 +18,7 @@ export const formatTransactionDate = (isoDate: string, formatType: DateFormat = 
         return format(date, 'MMM d, yyyy, h:mm a');
     }
   } catch (error) {
-    console.error('Error formatting date:', error);
+    console.log('Error formatting date:', error);
     return 'Invalid Date';
   }
 };

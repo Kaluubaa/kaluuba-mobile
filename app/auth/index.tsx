@@ -55,7 +55,7 @@ const AuthIndex = () => {
         </View>
 
         <View className="mt-6 flex-1 justify-center px-4">
-          <Text className="text-center font-clashmedium text-[26px] leading-relaxed tracking-wider text-gray-200">
+          <Text className="text-center font-clashmedium text-[26px] leading-[35px] tracking-wider text-gray-200">
             {item.title}
           </Text>
 

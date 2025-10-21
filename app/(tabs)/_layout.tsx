@@ -2,12 +2,13 @@ import { View, Text } from 'react-native';
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { HomeIcon } from '~/components/icons/heroicons';
 
 const _layout = () => {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#167D7F',
+        tabBarActiveTintColor: '#306B4F',
         tabBarInactiveTintColor: '#888',
         tabBarShowLabel: true,
         tabBarStyle: {
@@ -26,7 +27,7 @@ const _layout = () => {
         name="home"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <Ionicons name="home-outline" size={22} color={color} />,
+          tabBarIcon: ({ color }) => <HomeIcon size={22} color={color} />,
         }}
       />
       <Tabs.Screen

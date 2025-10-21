@@ -81,7 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           console.log('userrr', user);
         }
       } catch (error) {
-        console.error('Failed to initialize auth:', error);
+        console.log('Failed to initialize auth:', error);
         await logout();
       } finally {
         setLoading(false);

@@ -41,7 +41,7 @@ const CreateClient = () => {
   useEffect(() => {
     if (isError) {
       showToast({ type: 'error', message: 'Failed to create client. Please try again.' });
-      console.error('Client creation error:', error);
+      console.log('Client creation error:', error);
     }
   }, [isError, error, showToast]);
 
@@ -124,7 +124,7 @@ const CreateClient = () => {
             <TouchableOpacity
               onPress={handleSubmit(onSubmit)}
               disabled={isPending}
-              className="w-full py-4 rounded-xl bg-[#167D7F]"
+              className="w-full py-4 rounded-xl bg-primary-500"
             >
               <Text className="text-center text-base font-jarkatamedium text-white">
                 {isPending ? 'Creating...' : 'Create Client'}

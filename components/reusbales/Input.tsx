@@ -51,7 +51,7 @@ export const Input = ({
             <Ionicons
               name={leftIcon}
               size={20}
-              color={error ? '#ef4444' : isFocused ? '#4c18cc' : '#6b7280'}
+              color={error ? '#ef4444' : isFocused ? '#2a5d45' : '#6b7280'}
               style={{ marginRight: 8 }}
             />
           )}

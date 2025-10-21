@@ -20,8 +20,8 @@ export function useGetUserInvoices() {
   return useQuery({
     queryKey: ['invoices'],
     queryFn: getUserInvoices,
-    staleTime: 30000, // Consider data stale after 30 seconds
-    refetchOnWindowFocus: true, // Refetch when app comes to foreground
+    // staleTime: 30000, 
+    refetchOnWindowFocus: true,
   });
 }
 

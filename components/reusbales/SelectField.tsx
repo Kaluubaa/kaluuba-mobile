@@ -62,7 +62,7 @@ const SelectField = ({ label, options, value, onChange, placeholder = 'Select...
                 }}>
                 <Text className="text-base text-gray-800">{item.label}</Text>
                 {value === item.value ? (
-                  <Ionicons name="radio-button-on" size={22} color="#167D7F" />
+                  <Ionicons name="radio-button-on" size={22} color="#306B4F" />
                 ) : (
                   <Ionicons name="radio-button-off" size={22} color="#bbb" />
                 )}

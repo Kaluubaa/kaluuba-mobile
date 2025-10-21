@@ -60,7 +60,7 @@ const External = () => {
         Alert.alert('Clipboard Empty', 'No text found in clipboard');
       }
     } catch (error) {
-      console.error('Paste error:', error);
+      console.log('Paste error:', error);
       Alert.alert('Error', 'Failed to paste from clipboard');
     }
   };
@@ -179,7 +179,7 @@ const External = () => {
               disabled={!isValid || walletAddress.length === 0}
               className={`py-4 rounded-xl ${
                 isValid && walletAddress.length > 0
-                  ? 'bg-[#167D7F]'
+                  ? 'bg-primary-500'
                   : 'bg-gray-300'
               }`}
             >

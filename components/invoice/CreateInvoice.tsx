@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Pressable, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Ionicons } from '@expo/vector-icons';
 import { useCreateInvoice, useGetClient } from '~/hooks/use-invoice';
+import { useQueryClient } from '@tanstack/react-query';
 import { useToast } from '~/context/ToastContext';
 import { router } from 'expo-router';
 import { Button } from '../reusbales/Button';
@@ -31,7 +40,7 @@ const createInvoiceSchema = z.object({
     .min(1, 'At least one item is required'),
   discountType: z.enum(['percentage', 'fixed']),
   discountValue: z.number().min(0),
-  invoiceType: z.enum(['one-time', 'recurring']),
+  invoiceType: z.enum(['one_time', 'recurring']),
   recurrenceInterval: z.enum(['daily', 'weekly', 'monthly', 'yearly']).optional(),
   recurrenceCount: z.number().min(1).optional(),
   acceptsFiatPayment: z.boolean(),
@@ -42,33 +51,26 @@ type CreateInvoiceFormData = z.infer<typeof createInvoiceSchema>;
 
 export const CreateInvoice = () => {
   const { showToast } = useToast();
+  const queryClient = useQueryClient();
   const { mutate: createInvoice, isPending, isSuccess, isError, error } = useCreateInvoice();
   const { data: clientsData, refetch: refetchClients } = useGetClient();
   const [selectedClient, setSelectedClient] = useState<any>(null);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-  useEffect(() => {
-    if (isSuccess) {
-      showToast({ type: 'success', message: 'Invoice created successfully!' });
-      router.back();
-    }
-  }, [isSuccess, showToast]);
-
-  useEffect(() => {
-    if (isError) {
-      showToast({ type: 'error', message: 'Failed to create invoice. Please try again.' });
-      console.error('Invoice creation error:', error);
-    }
-  }, [isError, error, showToast]);
-
-  // Refresh clients when component mounts or when returning from create client
-  useEffect(() => {
-    refetchClients();
-  }, [refetchClients]);
-
   const handleCreateInvoice = (payload: any) => {
-    createInvoice(payload);
+    console.log('Payload:', payload);
+    createInvoice(payload, {
+      onSuccess: () => {
+        showToast({ type: 'success', message: 'Invoice created successfully!' });
+        queryClient.invalidateQueries({ queryKey: ['client', 'invoices'] });
+        router.back();
+      },
+      onError: (error: any) => {
+        showToast({ type: 'error', message: 'Failed to create invoice. Please try again.' });
+        console.log('Invoice creation error:', error);
+      },
+    });
   };
 
   const handleClientSelect = (client: any) => {
@@ -101,6 +103,7 @@ export const CreateInvoice = () => {
     handleSubmit,
     formState: { errors },
     setValue,
+    watch,
   } = useForm<CreateInvoiceFormData>({
     resolver: zodResolver(createInvoiceSchema),
     defaultValues: {
@@ -112,7 +115,7 @@ export const CreateInvoice = () => {
       items: [{ name: '', description: '', amount: 0, quantity: 1 }],
       discountType: 'percentage',
       discountValue: 0,
-      invoiceType: 'one-time',
+      invoiceType: 'one_time',
       acceptsFiatPayment: true,
       notes: '',
     },
@@ -123,12 +126,19 @@ export const CreateInvoice = () => {
     name: 'items',
   });
 
+  // Watch items to calculate total
+  const watchedItems = watch('items');
+  const total = watchedItems?.reduce((sum, item) => sum + (item.amount * item.quantity), 0) || 0;
+  
+  // Watch invoice type to show/hide recurrence fields
+  const invoiceType = watch('invoiceType');
+
   const onSubmit = (data: CreateInvoiceFormData) => {
     const payload = {
       clientId: data.clientId,
       title: data.title,
       description: data.description || '',
-      items: data.items.map(item => ({
+      items: data.items.map((item) => ({
         name: item.name,
         description: item.description || '',
         amount: item.amount,
@@ -153,9 +163,7 @@ export const CreateInvoice = () => {
       <View className="">
         <View className="">
           <View className="flex-row items-center gap-6 py-6">
-            <Text className="font-jarkatabold text-xs text-gray-400">
-              CLIENT SELECTION
-            </Text>
+            <Text className="font-jarkatabold text-xs text-gray-400">CLIENT SELECTION</Text>
             <View className="flex-1 border-b border-gray-200" />
           </View>
 
@@ -164,15 +172,16 @@ export const CreateInvoice = () => {
             name="clientId"
             render={({ field: { onChange, value } }) => (
               <View className="mb-4">
-                <Text className="mb-2 font-jarkatamedium text-sm text-gray-500">
-                  Select Client
-                </Text>
+                <Text className="mb-2 font-jarkatamedium text-sm text-gray-500">Select Client</Text>
                 <TouchableOpacity
                   onPress={() => SheetManager.show('client-selection-sheet')}
-                  className="rounded-lg border border-gray-200 px-4 py-3 flex-row items-center justify-between"
-                >
+                  className="flex-row items-center justify-between rounded-lg border border-gray-200 px-4 py-3">
                   <Text className="font-jarkataregular text-sm text-gray-900">
-                    {selectedClient ? `${selectedClient.contactName || selectedClient.businesName} (${selectedClient.clientIdentifier})` : clientsData?.data?.clients?.find((client: any) => client.id === value) ? `${clientsData.data.clients.find((client: any) => client.id === value).contactName || clientsData.data.clients.find((client: any) => client.id === value).businesName} (${clientsData.data.clients.find((client: any) => client.id === value).clientIdentifier})` : 'Select a client'}
+                    {selectedClient
+                      ? selectedClient.clientIdentifier
+                      : clientsData?.data?.clients?.find((client: any) => client.id === value)
+                        ? clientsData.data.clients.find((client: any) => client.id === value).clientIdentifier
+                        : 'Select a client'}
                   </Text>
                   <Ionicons name="chevron-down" size={16} color="#6B7280" />
                 </TouchableOpacity>
@@ -185,11 +194,8 @@ export const CreateInvoice = () => {
             )}
           />
 
-
           <View className="flex-row items-center gap-6 py-6">
-            <Text className="font-jarkatabold text-xs text-gray-400">
-              INVOICE DETAILS
-            </Text>
+            <Text className="font-jarkatabold text-xs text-gray-400">INVOICE DETAILS</Text>
             <View className="flex-1 border-b border-gray-200" />
           </View>
 
@@ -266,10 +272,11 @@ export const CreateInvoice = () => {
                 <Text className="mb-2 font-jarkatamedium text-sm text-gray-500">Due Date</Text>
                 <TouchableOpacity
                   onPress={showDatePicker}
-                  className="rounded-lg border border-gray-200 px-4 py-3 flex-row items-center justify-between"
-                >
+                  className="flex-row items-center justify-between rounded-lg border border-gray-200 px-4 py-3">
                   <Text className="font-jarkataregular text-sm text-gray-900">
-                    {selectedDate ? format(selectedDate, 'MMM dd, yyyy') : value || 'Select due date'}
+                    {selectedDate
+                      ? format(selectedDate, 'MMM dd, yyyy')
+                      : value || 'Select due date'}
                   </Text>
                   <Ionicons name="calendar-outline" size={16} color="#6B7280" />
                 </TouchableOpacity>
@@ -282,10 +289,71 @@ export const CreateInvoice = () => {
             )}
           />
 
+          <Controller
+            control={control}
+            name="invoiceType"
+            render={({ field: { onChange, value } }) => (
+              <View className="mb-4">
+                <Text className="mb-2 font-jarkatamedium text-sm text-gray-500">Invoice Type</Text>
+                <View className="flex-row gap-4">
+                  <TouchableOpacity
+                    onPress={() => onChange('one_time')}
+                    className="flex-row items-center">
+                    <View className="mr-2 h-5 w-5 items-center justify-center rounded-full border-2 border-gray-300">
+                      {value === 'one_time' && (
+                        <View className="h-3 w-3 rounded-full bg-primary-500" />
+                      )}
+                    </View>
+                    <Text className="font-jarkataregular text-sm text-gray-700">One_time</Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    onPress={() => onChange('recurring')}
+                    className="flex-row items-center">
+                    <View className="mr-2 h-5 w-5 items-center justify-center rounded-full border-2 border-gray-300">
+                      {value === 'recurring' && (
+                        <View className="h-3 w-3 rounded-full bg-primary-500" />
+                      )}
+                    </View>
+                    <Text className="font-jarkataregular text-sm text-gray-700">Recurring</Text>
+                  </TouchableOpacity>
+                </View>
+                {errors.invoiceType && (
+                  <Text className="mt-1 font-jarkataregular text-sm text-red-500">
+                    {errors.invoiceType.message}
+                  </Text>
+                )}
+              </View>
+            )}
+          />
+
+          {invoiceType === 'recurring' && (
+            <Controller
+              control={control}
+              name="recurrenceInterval"
+              render={({ field: { onChange, value } }) => (
+                <View className="mb-4">
+                  <Text className="mb-2 font-jarkatamedium text-sm text-gray-500">Recurrence Interval</Text>
+                  <TouchableOpacity
+                    onPress={() => SheetManager.show('recurrence-interval-sheet')}
+                    className="flex-row items-center justify-between rounded-lg border border-gray-200 px-4 py-3">
+                    <Text className="font-jarkataregular text-sm text-gray-900">
+                      {value ? value.charAt(0).toUpperCase() + value.slice(1) : 'Select interval'}
+                    </Text>
+                    <Ionicons name="chevron-down" size={16} color="#6B7280" />
+                  </TouchableOpacity>
+                  {errors.recurrenceInterval && (
+                    <Text className="mt-1 font-jarkataregular text-sm text-red-500">
+                      {errors.recurrenceInterval.message}
+                    </Text>
+                  )}
+                </View>
+              )}
+            />
+          )}
+
           <View className="mt-4 flex-row items-center gap-6 py-4">
-            <Text className="font-jarkatabold text-xs text-gray-400">
-              INVOICE ITEMS
-            </Text>
+            <Text className="font-jarkatabold text-xs text-gray-400">INVOICE ITEMS</Text>
             <View className="flex-1 border-b border-gray-200" />
           </View>
           <Text className="mb-4 font-jarkatamedium text-gray-700">Items</Text>
@@ -302,19 +370,19 @@ export const CreateInvoice = () => {
           <Pressable
             onPress={() => append({ name: '', description: '', amount: 0, quantity: 1 })}
             className="mb-6 flex-row items-center justify-center rounded-lg py-5">
-            <Ionicons name="add" size={14} color="#167D7F" />
+            <Ionicons name="add" size={14} color="#306B4F" />
             <Text className="ml-2 font-jarkatamedium text-primary-500">Add Item</Text>
           </Pressable>
 
-          <View className="flex-row items-center justify-between border-y mb-6 py-4 border-gray-200 pt-4">
+          <View className="mb-6 flex-row items-center justify-between border-y border-gray-200 py-4 pt-4">
             <Text className="font-jarkatabold text-gray-800">Total</Text>
-            <Text className="font-jarkatabold text-gray-600">$ 00.00</Text>
+            <Text className="font-jarkatabold text-gray-600">${total.toFixed(2)}</Text>
           </View>
-          
+
           <Pressable
             onPress={handleSubmit(onSubmit)}
             disabled={isPending}
-            className="mb-4 flex-row items-center justify-center rounded-lg bg-[#167D7F] py-4">
+            className="mb-4 flex-row items-center justify-center rounded-lg bg-primary-500 py-4">
             <Text className="font-jarkatamedium text-white">
               {isPending ? 'Creating...' : 'Create Invoice'}
             </Text>
@@ -335,34 +403,37 @@ export const CreateInvoice = () => {
           borderTopRightRadius: 20,
           backgroundColor: 'white',
         }}>
-        <View className="py-6 px-6">
-          <Text className="text-lg font-jarkatabold text-black mb-6 text-center">Select Client</Text>
-          
+        <View className="px-6 py-6">
+          <Text className="mb-6 text-center font-jarkatabold text-lg text-black">
+            Select Client
+          </Text>
+
           <FlatList
             data={clientsData?.data?.clients || []}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <TouchableOpacity
                 onPress={() => handleClientSelect(item)}
-                className="flex-row items-center py-4 border-b border-gray-100"
-              >
+                className="flex-row items-center border-b border-gray-100 py-4">
                 <View className="flex-1">
-                  <Text className="text-base font-jarkatamedium text-black">
+                  <Text className="font-jarkatamedium text-base text-black">
                     {item.contactName || item.businesName || 'Unnamed Client'}
                   </Text>
-                  <Text className="text-sm font-jarkataregular text-gray-500">
+                  <Text className="font-jarkataregular text-sm text-gray-500">
                     {item.clientIdentifier}
                   </Text>
                 </View>
                 {selectedClient?.id === item.id && (
-                  <Ionicons name="checkmark" size={20} color="#167D7F" />
+                  <Ionicons name="checkmark" size={20} color="#306B4F" />
                 )}
               </TouchableOpacity>
             )}
             ListEmptyComponent={
-              <View className="py-8 items-center">
-                <Text className="text-base font-jarkatamedium text-gray-500 mb-2">No clients found</Text>
-                <Text className="text-sm font-jarkataregular text-gray-400 text-center">
+              <View className="items-center py-8">
+                <Text className="mb-2 font-jarkatamedium text-base text-gray-500">
+                  No clients found
+                </Text>
+                <Text className="text-center font-jarkataregular text-sm text-gray-400">
                   Create your first client to get started
                 </Text>
               </View>
@@ -371,13 +442,44 @@ export const CreateInvoice = () => {
 
           <TouchableOpacity
             onPress={handleCreateNewClient}
-            className="mt-4 flex-row items-center justify-center py-4 border border-dashed border-[#167D7F] rounded-xl"
-          >
-            <Ionicons name="add" size={20} color="#167D7F" />
-            <Text className="ml-2 font-jarkatamedium text-[#167D7F] text-base">
+            className="mt-4 flex-row items-center justify-center rounded-xl border border-dashed border-primary-500 py-4">
+            <Ionicons name="add" size={20} color="#306B4F" />
+            <Text className="ml-2 font-jarkatamedium text-base text-primary-500">
               Create New Client
             </Text>
           </TouchableOpacity>
+        </View>
+      </ActionSheet>
+
+      {/* Recurrence Interval Selection Sheet */}
+      <ActionSheet
+        id="recurrence-interval-sheet"
+        isModal={true}
+        closable={true}
+        backgroundInteractionEnabled={false}
+        containerStyle={{
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+          backgroundColor: 'white',
+        }}>
+        <View className="px-6 py-6">
+          <Text className="mb-6 text-center font-jarkatabold text-lg text-black">
+            Select Recurrence Interval
+          </Text>
+          
+          {['daily', 'weekly', 'monthly', 'yearly'].map((interval) => (
+            <TouchableOpacity
+              key={interval}
+              onPress={() => {
+                setValue('recurrenceInterval', interval as 'daily' | 'weekly' | 'monthly' | 'yearly');
+                SheetManager.hide('recurrence-interval-sheet');
+              }}
+              className="flex-row items-center border-b border-gray-100 py-4">
+              <Text className="font-jarkatamedium text-base text-black">
+                {interval.charAt(0).toUpperCase() + interval.slice(1)}
+              </Text>
+            </TouchableOpacity>
+          ))}
         </View>
       </ActionSheet>
 

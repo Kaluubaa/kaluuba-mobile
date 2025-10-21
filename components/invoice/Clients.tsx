@@ -6,30 +6,39 @@ import { IClient } from '~/types/invoice.t';
 import { Button } from '../reusbales/Button';
 
 type Props = {
-  clients: IClient[];
+  clients?: IClient[];
   onRefresh?: () => void;
   refreshing?: boolean;
 };
 
 const Clients = ({ clients, onRefresh, refreshing = false }: Props) => {
-  const renderClient = ({ item }: { item: IClient }) => {
-    const initial = item.contactName
-      ? item.contactName.charAt(0).toUpperCase()
-      : item.clientIdentifier.charAt(0).toUpperCase();
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
 
+  const renderClient = ({ item }: { item: IClient }) => {
+    const firstLetter = item.clientIdentifier.charAt(0).toUpperCase();
+    
     return (
       <Pressable
         onPress={() => {}}
-        className="mb- flex-row items-center justify-between rounded-lg p-3 ">
+        className="mb-2 flex-row items-center justify-between rounded-lg bg-white p-4">
         <View className="flex-row items-center">
-          <View className="mr-3 h-10 w-10 items-center justify-center rounded-full bg-primary-600">
-            {/* <Text className="text-white text-lg font-bold">{initial}</Text> */}
+          <View className="mr-3 h-10 w-10 items-center justify-center rounded-full bg-primary-500">
+            <Text className="text-white text-sm font-jarkatabold">{firstLetter}</Text>
           </View>
           <View className="flex-1">
             <Text className="font-jarkatamedium text-base text-gray-800">
-              {item.contactName || item.clientIdentifier}
+              {item.clientIdentifier}
             </Text>
-            <Text className="font-jarkataregular text-sm text-gray-500"> Invoice Count (2) </Text>
+            <Text className="font-jarkataregular text-sm text-gray-500">
+              Added {formatDate(item.createdAt)}
+            </Text>
           </View>
         </View>
 
@@ -42,7 +51,7 @@ const Clients = ({ clients, onRefresh, refreshing = false }: Props) => {
 
   return (
     <View className="flex-1">
-      {clients.length === 0 ? (
+      {!clients || clients.length === 0 ? (
         <View className="flex-1 items-center justify-center gap-4 pt-52">
           <Ionicons name="person-add" size={24} color="#9ca3af" />
           <Text className="font-jarkatamedium text-base text-gray-400">
@@ -61,7 +70,7 @@ const Clients = ({ clients, onRefresh, refreshing = false }: Props) => {
           data={clients}
           renderItem={renderClient}
           keyExtractor={(item) => item.id.toString()}
-          contentContainerClassName="p-4"
+          contentContainerClassName=""
           refreshControl={
             onRefresh ? (
               <RefreshControl

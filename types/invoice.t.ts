@@ -10,6 +10,7 @@ type InvoiceType = "one-time" | "recurring";
 type RecurrenceInterval = "daily" | "weekly" | "monthly" | "yearly";
 
 export interface Invoice {
+  id: number;
   clientId: number;
   title: string;
   description: string;
@@ -23,6 +24,9 @@ export interface Invoice {
   recurrenceCount?: number; 
   acceptsFiatPayment: boolean;
   notes?: string;
+  status: 'draft' | 'pending' | 'paid' | 'overdue';
+  createdAt: string;
+  updatedAt: string;
 }
 
 

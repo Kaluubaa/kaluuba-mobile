@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Pressable, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Pressable, ScrollView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useForm, Controller } from 'react-hook-form';
@@ -49,8 +49,6 @@ const Signup = () => {
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      // firstName: '',
-      // lastName: '',
       username: '',
       email: '',
       country: null,
@@ -100,20 +98,24 @@ const Signup = () => {
   };
 
   return (
-    <Container className="flex-1 bg-white" loading={isPending}>
-      <View className="px-2 py-6">
-        <View className="mb-8">
-          <Pressable onPress={() => router.back()} className="mb-6 flex-row items-center gap-3">
-            <Ionicons name="chevron-back" size={22} color="#000000" />
-            <Text className="font-clashmedium text-[22px] text-gray-900">Create An Account</Text>
-          </Pressable>
-          <Text className="mt-3 font-jarkataregular text-gray-600">
-            🚀 Ready to join the adventure? Fill in your details and let&apos;s get started!
-          </Text>
-        </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <Container className="flex-1 bg-white" loading={isPending}>
+        <View className="px-2 py-6">
+          <View className="mb-8">
+            <Pressable onPress={() => router.back()} className="mb-6 flex-row items-center gap-3">
+              <Ionicons name="chevron-back" size={22} color="#000000" />
+              <Text className="font-clashmedium text-[22px] text-gray-900">Create An Account</Text>
+            </Pressable>
+            <Text className="mt-3 font-jarkataregular text-gray-600">
+              🚀 Ready to join the adventure? Fill in your details and let&apos;s get started!
+            </Text>
+          </View>
 
-        <ScrollView>
-          <View className="gap-4">
+          <ScrollView 
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            <View className="gap-4">
             {/* <Controller
             control={control}
             name="firstName"
@@ -220,30 +222,31 @@ const Signup = () => {
             />
           </View>
 
-          <View className="mt-6 flex-row items-center justify-center space-x-1">
-            <Text className="font-jarkataregular text-gray-600">Already have an account?</Text>
-            <Link href="/auth/login" className="font-jarkatamedium text-primary-500">
-              Sign In
-            </Link>
-          </View>
-
           <View className="my-6 mb-8 px-2">
             <Button size="lg" className="h-[46px]" onPress={handleSubmit(onSubmit)}>
               Create Account
             </Button>
           </View>
-        </ScrollView>
-      </View>
 
-      <CountryModal
-        filteredCountries={filteredCountries}
-        isCountryModalVisible={isCountryModalVisible}
-        searchQuery={searchQuery}
-        setIsCountryModalVisible={setIsCountryModalVisible}
-        setSearchQuery={setSearchQuery}
-        setSelectedCountry={(country) => setValue('country', country)}
-      />
-    </Container>
+          <View className="mt-6 flex-row items-center justify-center space-x-1">
+            <Text className="font-jarkataregular text-gray-600">Already have an account?</Text>
+            <Link href="/auth/login" className="font-jarkatamedium text-primary-500">
+              Sign In
+            </Link>
+            </View>
+          </ScrollView>
+        </View>
+
+        <CountryModal
+          filteredCountries={filteredCountries}
+          isCountryModalVisible={isCountryModalVisible}
+          searchQuery={searchQuery}
+          setIsCountryModalVisible={setIsCountryModalVisible}
+          setSearchQuery={setSearchQuery}
+          setSelectedCountry={(country) => setValue('country', country)}
+        />
+      </Container>
+    </TouchableWithoutFeedback>
   );
 };
 

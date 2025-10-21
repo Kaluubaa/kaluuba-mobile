@@ -56,8 +56,8 @@ const Send = () => {
                 className="mb-6 flex-row items-center">
                 <View
                   className="mr-4 h-12 w-12 items-center justify-center rounded-full"
-                  style={{ backgroundColor: '#E6F7F8' }}>
-                  <Ionicons name={option.icon as any} size={20} color="#167D7F" />
+                  style={{ backgroundColor: '#f0f9f4' }}>
+                  <Ionicons name={option.icon as any} size={20} color="#306B4F" />
                 </View>
 
                 <View className="flex-1">

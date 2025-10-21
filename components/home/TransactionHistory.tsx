@@ -25,9 +25,11 @@ const TransactionHistory = ({ transactions }: Prop) => {
     }
   };
   return (
-    <View className="mt-8 flex-1 px-2">
-      <View className="mb-3 flex-row items-center justify-between">
-        <Text className="font-jarkatabold tracking-wider text-gray-800">Recent Transactions</Text>
+    <View className="mt-6 flex-1 px-2">
+      <View className="mb-4 flex-row items-center justify-between">
+        <Text className="font-jarkatasemibold text-[13px] tracking-wider text-gray-900">
+          Recent Transactions
+        </Text>
         <TouchableOpacity onPress={() => router.push('/history')}>
           <View className="flex-row items-center gap-2">
             <Text className="font-jarkatamedium text-sm text-primary-600">See all</Text>
@@ -35,17 +37,20 @@ const TransactionHistory = ({ transactions }: Prop) => {
           </View>
         </TouchableOpacity>
       </View>
-      <FlatList
-        data={transactions}
-        keyExtractor={(item) => item.transactionId}
-        renderItem={({ item }) => <TransactionItem transaction={item} />}
-        ListEmptyComponent={
-          <View className="items-center py-16">
-            <Text className="text-gray-400">No transactions yet.</Text>
-          </View>
-        }
-        scrollEnabled={false}
-      />
+
+      <View className="rounded-xl bg-white p-4">
+        <FlatList
+          data={transactions.slice(0, 2)}
+          keyExtractor={(item) => item.transactionId}
+          renderItem={({ item }) => <TransactionItem transaction={item} />}
+          ListEmptyComponent={
+            <View className="items-center py-16">
+              <Text className="text-gray-400">No transactions yet.</Text>
+            </View>
+          }
+          scrollEnabled={false}
+        />
+      </View>
     </View>
   );
 };

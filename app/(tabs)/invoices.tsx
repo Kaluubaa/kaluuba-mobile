@@ -1,5 +1,5 @@
-import React from 'react';
-import { Text, TouchableOpacity, View, ScrollView, RefreshControl } from 'react-native';
+import React, { useEffect } from 'react';
+import { Text, TouchableOpacity, View, ScrollView, RefreshControl, BackHandler } from 'react-native';
 import Clients from '~/components/invoice/Clients';
 import { InvoiceList } from '~/components/invoice/InvoiceList';
 import { Container } from '~/components/reusbales/Container';
@@ -22,10 +22,20 @@ const InvoicesPage = () => {
   // Use the custom refresh hook
   const { refreshing, onRefresh } = useRefresh([refetchInvoices, refetchClients]);
 
-  const invoices = data?.data.invoices;
+  const invoices = data?.data?.result?.invoices;
   const allClients = clients?.data?.clients;
 
-  console.log(clients);
+  console.log('hmmmmmmm', invoices);
+
+  useEffect(() => {
+    const backAction = () => {
+      BackHandler.exitApp();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+  }, []);
   return (
     <Container className="flex-1 px-2">
       <View className="flex-row justify-between">

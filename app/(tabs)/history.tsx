@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, FlatList, Pressable, ScrollView } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, FlatList, Pressable, ScrollView, BackHandler } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Container } from '~/components/reusbales/Container';
 import Header from '~/components/reusbales/Header';
@@ -12,6 +12,17 @@ const TransactionHistoryPage = () => {
   const { data: trxhistory, isLoading: isLoadingTrx } = useGetTransactionHistory();
 
   const transactions = trxhistory?.data?.transactions || [];
+
+  // Handle back button to close/minimize app instead of going to login
+  useEffect(() => {
+    const backAction = () => {
+      BackHandler.exitApp();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+  }, []);
   return (
     <Container className="px-2">
       <Header title="History" />
@@ -25,24 +36,23 @@ const TransactionHistoryPage = () => {
           ))}
         </View>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View className="mt-6 flex-1">
-          {isLoadingTrx ? (
-            <Text>Loading...</Text>
-          ) : (
-            <FlatList
-              data={transactions}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => <TransactionItem key={item.id} transaction={item} />}
-              ListEmptyComponent={
-                <View className="items-center py-8">
-                  <Text className="text-gray-400">No transactions yet.</Text>
-                </View>
-              }
-            />
-          )}
-        </View>
-      </ScrollView>
+      <View className="mt-6 flex-1">
+        {isLoadingTrx ? (
+          <Text>Loading...</Text>
+        ) : (
+          <FlatList
+            data={transactions}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => <TransactionItem transaction={item} />}
+            ListEmptyComponent={
+              <View className="items-center py-8">
+                <Text className="text-gray-400">No transactions yet.</Text>
+              </View>
+            }
+            showsVerticalScrollIndicator={false}
+          />
+        )}
+      </View>
     </Container>
   );
 };
