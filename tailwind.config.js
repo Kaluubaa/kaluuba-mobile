@@ -7,41 +7,39 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          default: '#306B4F', // Dark green for primary buttons
-          50: '#f0f9f4',
-          100: '#dcf4e6',
-          200: '#bce8d1',
-          300: '#8dd5b3',
-          400: '#4C9C70', // Light green for hover states and accents
-          500: '#306B4F', // Dark green base
-          600: '#2a5d45',
-          700: '#244e3a',
-          800: '#1e3f30',
-          900: '#1a3528',
-          950: '#0d1b14',
+          DEFAULT: '#0A4F3C', // main brand green
+          50:  '#E9F8F2',     // light mint white
+          100: '#DFF7EC',
+          200: '#B8EAD4',
+          300: '#89D4B7',
+          400: '#4FB98E',
+          500: '#0F6A4B',     // mid jungle green
+          600: '#0A4F3C',     // deep teal green
+          700: '#083F31',
+          800: '#063326',
+          900: '#032018',
+          950: '#01100C',     // ultra dark green
         },
-        accent: {
-          default: '#4C9C70', // Light green for secondary elements
-          50: '#f0f9f4',
-          100: '#dcf4e6',
-          200: '#bce8d1',
-          300: '#8dd5b3',
-          400: '#4C9C70', // Light green base
-          500: '#3d7c5a',
-          600: '#336648',
-          700: '#2a5139',
-          800: '#22412e',
-          900: '#1d3627',
-          950: '#0f1d15',
+
+        gradient: {
+          start: '#003B2E',   // deep emerald
+          mid: '#0A4F3C',     // teal green
+          end: '#0F6A4B',     // jungle green
+        },
+
+        glass: {
+          light: 'rgba(255, 255, 255, 0.12)',
+          medium: 'rgba(255, 255, 255, 0.18)',
+          heavy: 'rgba(255, 255, 255, 0.26)',
         },
       },
+
       fontFamily: {
-        jarkatalight: ['jarkatalight'],
-        jarkataregular: ['jarkataregular'],
-        jarkatamedium: ['jarkatamedium'],
-        jarkatasemibold: ['jarkatarSemibold'],
-        jarkatabold: ['jarkatabold'],
-        clashmedium: ['clashmedium'],
+        interLight: ["InterLight"],
+        inter: ["InterRegular"],
+        interMedium: ["InterMedium"],
+        interSemiBold: ["InterSemiBold"],
+        interBold: ["InterBold"],
       },
     },
   },

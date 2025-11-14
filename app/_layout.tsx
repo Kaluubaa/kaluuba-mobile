@@ -10,14 +10,29 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SheetProvider } from 'react-native-actions-sheet';
 import SendTypeSheet from '~/components/sheets/SendTypeShee';
 
+// Inter Fonts
+import {
+  Inter_300Light,
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  Inter_700Bold,
+} from '@expo-google-fonts/inter';
+
 const queryClient = new QueryClient();
 
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts(customFonts);
+  // Load BOTH custom fonts + Inter fonts
+  const [fontsLoaded] = useFonts({
+    ...customFonts, // your Jakarta fonts
+    InterLight: Inter_300Light,
+    InterRegular: Inter_400Regular,
+    InterMedium: Inter_500Medium,
+    InterSemiBold: Inter_600SemiBold,
+    InterBold: Inter_700Bold,
+  });
 
-  if (!fontsLoaded) {
-    return null;
-  }
+  if (!fontsLoaded) return null;
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -30,35 +45,14 @@ export default function RootLayout() {
                 screenOptions={{
                   headerShown: false,
                   headerTitleStyle: {
-                    fontFamily: 'jarkataregular',
+                    fontFamily: 'InterRegular',
                   },
-                }}>
-                <Stack.Screen
-                  name="index"
-                  options={{
-                    headerShown: false,
-                  }}
-                />
-                <Stack.Screen
-                  name="scan"
-                  options={{
-                    headerShown: false,
-                  }}
-                />
-
-                <Stack.Screen
-                  name="send"
-                  options={{
-                    headerShown: false,
-                  }}
-                />
-
-                <Stack.Screen
-                  name="recieve"
-                  options={{
-                    headerShown: false,
-                  }}
-                />
+                }}
+              >
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+                <Stack.Screen name="scan" options={{ headerShown: false }} />
+                <Stack.Screen name="send" options={{ headerShown: false }} />
+                <Stack.Screen name="recieve" options={{ headerShown: false }} />
               </Stack>
             </AuthProvider>
           </ToastProvider>
