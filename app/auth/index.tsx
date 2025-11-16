@@ -40,7 +40,7 @@ const AuthIndex = () => {
     item: { key: string; title: string; text: string; image: any; backgroundColor: string };
   }) => {
     return (
-      <View className="flex-1 bg-black px-6 py-10">
+      <View className="flex-1 bg-white px-6 py-10">
         <View
           className={`relative h-[65%] w-full items-center justify-center overflow-hidden rounded-xl ${item.backgroundColor}`}>
           <Image
@@ -55,11 +55,11 @@ const AuthIndex = () => {
         </View>
 
         <View className="mt-6 flex-1 justify-center px-4">
-          <Text className="text-center font-clashmedium text-[26px] leading-[35px] tracking-wider text-gray-200">
+          <Text className="text-center font-clashmedium text-[26px] leading-[35px] tracking-wider text-gray-800">
             {item.title}
           </Text>
 
-          <Text className="mt-6 text-center font-jarkatalight text-base text-gray-300">
+          <Text className="mt-6 text-center font-jarkatalight text-base text-gray-950">
             {item.text}
           </Text>
         </View>
@@ -75,7 +75,7 @@ const AuthIndex = () => {
             <View
               key={i}
               className={`h-2 w-2 rounded-full ${
-                i === activeIndex ? 'w-4 bg-primary-500' : 'bg-gray-300'
+                i === activeIndex ? 'w-4 bg-gradient-mid' : 'bg-gray-900'
               }`}
             />
           ))}
@@ -84,11 +84,12 @@ const AuthIndex = () => {
         <View className="gap-4">
           <Button
             size="lg"
-            className="h-[55px] gap-10 rounded-full"
-            textClassName="flex-row items-center text-base font-semibold"
-            onPress={() => router.push('/auth/login')}>
+            className="h-[55px] rounded-full"
+            textClassName="text-base font-semibold"
+            gradient={['#033726', '#064C36', '#0A6045']} // this applies gradient to the button background
+            onPress={() => router.push('/auth/login')}
+          >
             Get Started
-            {/* <Ionicons name="arrow-forward" size={20} color="#ffffff" className="ml-2" /> */}
           </Button>
         </View>
       </View>
@@ -96,7 +97,7 @@ const AuthIndex = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-black">
+    <SafeAreaView className="flex-1 bg-white">
       <AppIntroSlider
         data={slides}
         renderItem={renderSlide}

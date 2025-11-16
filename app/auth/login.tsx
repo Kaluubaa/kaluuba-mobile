@@ -55,7 +55,7 @@ const Login = () => {
           console.log(err);
 
           const firstField = Object.keys(err.errors || {})[0];
-          const firstMessage = firstField ? err.errors[firstField] : 'Signup failed';
+          const firstMessage = firstField ? err.errors[firstField] : 'Signin failed';
 
           showToast({
             type: 'error',
@@ -74,10 +74,10 @@ const Login = () => {
           <View className="mb-8">
             <Pressable onPress={() => router.back()} className="mb-6 flex-row items-center gap-3">
               <Ionicons name="chevron-back" size={22} color="#000000" />
-              <Text className="font-clashmedium text-2xl text-gray-900">Sign To Your Account</Text>
+              <Text className="font-interSemiBold text-2xl text-gray-900">Sign To Your Account</Text>
             </Pressable>
-            <Text className="mt-3 font-jarkataregular text-gray-600">
-              Welcome back 🚀! Please enter your credentials to continue.
+            <Text className="mt-3 font-interLight text-base text-gray-600">
+              Welcome back! Please enter your credentials to continue.
             </Text>
           </View>
 
@@ -87,7 +87,7 @@ const Login = () => {
               name="username"
               render={({ field: { onChange, value } }) => (
                 <Input
-                  label="username"
+                  label="Username"
                   placeholder="Enter your username"
                   leftIcon="person-outline"
                   keyboardType="default"
@@ -115,18 +115,24 @@ const Login = () => {
               )}
             />
 
-            <Text className="text-right font-jarkatalight text-sm text-gray-700">
+            <Text className="text-right font-interLight text-sm text-gray-700">
               Forgotten Password?
             </Text>
           </View>
 
           <View className="my-8 px-2">
-            <Button size="lg" className="h-[46px]" onPress={handleSubmit(onSubmit)}>
+            <Button 
+              size="lg" 
+              className="h-[55px] rounded-full"
+              textClassName="text-base font-semibold"
+              gradient={['#033726', '#064C36', '#0A6045']}
+              onPress={handleSubmit(onSubmit)}
+            >
               Sign In
             </Button>
           </View>
           <View className="flex-row items-center justify-center space-x-1">
-            <Text className="font-jarkataregular text-sm text-gray-600">
+            <Text className="font-interLight text-base mr-2 text-gray-600">
               Don&apos;t have an account?
             </Text>
             <Link href="/auth/signup" className="font-jarkatamedium text-primary-500">

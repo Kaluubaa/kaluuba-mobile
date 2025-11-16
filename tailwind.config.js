@@ -32,6 +32,11 @@ module.exports = {
           medium: 'rgba(255, 255, 255, 0.18)',
           heavy: 'rgba(255, 255, 255, 0.26)',
         },
+
+        backgroundImage: {
+        "brand-gradient":
+          "linear-gradient(135deg, #033726 0%, #064C36 50%, #0A6045 100%)",
+      },
       },
 
       fontFamily: {

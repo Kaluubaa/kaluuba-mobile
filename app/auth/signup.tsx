@@ -104,10 +104,10 @@ const Signup = () => {
           <View className="mb-8">
             <Pressable onPress={() => router.back()} className="mb-6 flex-row items-center gap-3">
               <Ionicons name="chevron-back" size={22} color="#000000" />
-              <Text className="font-clashmedium text-[22px] text-gray-900">Create An Account</Text>
+              <Text className="font-interSemiBold text-[22px] text-gray-900">Create An Account</Text>
             </Pressable>
-            <Text className="mt-3 font-jarkataregular text-gray-600">
-              🚀 Ready to join the adventure? Fill in your details and let&apos;s get started!
+            <Text className="mt-3 font-interLight text-lg text-gray-600">
+              Ready to join the adventure? Fill in your details and let&apos;s get started!
             </Text>
           </View>
 
@@ -116,42 +116,12 @@ const Signup = () => {
             showsVerticalScrollIndicator={false}
           >
             <View className="gap-4">
-            {/* <Controller
-            control={control}
-            name="firstName"
-            render={({ field: { onChange, value } }) => (
-              <Input
-                label="First Name"
-                placeholder="Enter your first name"
-                leftIcon="person-outline"
-                onChangeText={onChange}
-                value={value}
-                error={errors.firstName?.message}
-              />
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="lastName"
-            render={({ field: { onChange, value } }) => (
-              <Input
-                label="Last Name"
-                placeholder="Enter your last name"
-                leftIcon="person-outline"
-                onChangeText={onChange}
-                value={value}
-                error={errors.lastName?.message}
-              />
-            )}
-          /> */}
-
             <Controller
               control={control}
               name="username"
               render={({ field: { onChange, value } }) => (
                 <Input
-                  label="User Name"
+                  label="Username"
                   placeholder="Enter your User name"
                   leftIcon="person-outline"
                   onChangeText={onChange}
@@ -180,7 +150,7 @@ const Signup = () => {
             />
 
             <View>
-              <Text className="mb-2 font-jarkatamedium text-sm text-gray-700">Country</Text>
+              <Text className="mb-2 font-interMedium text-sm text-gray-700">Country</Text>
               <TouchableOpacity
                 onPress={() => setIsCountryModalVisible(true)}
                 className={`flex-row items-center justify-between rounded-lg border p-3 ${
@@ -189,17 +159,17 @@ const Signup = () => {
                 {selectedCountry ? (
                   <>
                     <Text className="mr-3 text-lg">{selectedCountry.flag}</Text>
-                    <Text className="flex-1 font-jarkataregular text-gray-900">
+                    <Text className="flex-1 font-interLight text-gray-900">
                       {selectedCountry.name}
                     </Text>
                   </>
                 ) : (
-                  <Text className="font-jarkataregular text-gray-500">Select your country</Text>
+                  <Text className="font-interLight text-gray-500">Select your country</Text>
                 )}
                 <Ionicons name="chevron-down" size={20} color="#6B7280" />
               </TouchableOpacity>
               {errors.country && (
-                <Text className="mt-1 font-jarkataregular text-sm text-red-500">
+                <Text className="mt-1 font-interLight text-sm text-red-500">
                   {errors.country.message}
                 </Text>
               )}
@@ -223,14 +193,20 @@ const Signup = () => {
           </View>
 
           <View className="my-6 mb-8 px-2">
-            <Button size="lg" className="h-[46px]" onPress={handleSubmit(onSubmit)}>
+            <Button 
+              size="lg"
+              className="h-[55px] rounded-full"
+              textClassName="text-base font-interSemiBold"
+              gradient={['#033726', '#064C36', '#0A6045']}
+              onPress={handleSubmit(onSubmit)}
+            >
               Create Account
             </Button>
           </View>
 
           <View className="mt-6 flex-row items-center justify-center space-x-1">
-            <Text className="font-jarkataregular text-gray-600">Already have an account?</Text>
-            <Link href="/auth/login" className="font-jarkatamedium text-primary-500">
+            <Text className="font-interLight text-gray-900 mr-2">Already have an account?</Text>
+            <Link href="/auth/login" className="font-interLight text-primary-500">
               Sign In
             </Link>
             </View>
